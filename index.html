@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gokul Pipeline - Advanced CRM</title>
+  <title>Gokul Group - Advanced CRM</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -457,10 +457,17 @@
     }
 
     .sidebar-header {
-      padding: 28px 24px;
+      padding: 0 24px 18px;
       border-bottom: 1px solid var(--border);
       position: relative;
       background: linear-gradient(135deg, rgba(29, 78, 216, 0.05) 0%, rgba(13, 148, 136, 0.05) 100%);
+    }
+
+    .sidebar-top-row {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .logo {
@@ -476,7 +483,6 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      margin-bottom: 14px;
       text-align: center;
     }
 
@@ -674,16 +680,13 @@
     }
 
     .password-quick-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 28px;
-      height: 28px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       border: 1px solid rgba(29, 78, 216, 0.3);
       background: linear-gradient(135deg, rgba(29, 78, 216, 0.12) 0%, rgba(13, 148, 136, 0.12) 100%);
       color: var(--primary);
-      font-size: 13px;
+      font-size: 15px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -754,6 +757,84 @@
       flex-direction: column;
       background: var(--bg);
       transition: all 0.3s ease;
+    }
+
+    .top-header {
+      height: 70px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--white);
+      box-sizing: border-box;
+    }
+
+    .top-header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .theme-toggle-mini {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--gray-100);
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-mini:hover {
+      background: var(--primary);
+      transform: scale(1.08);
+    }
+
+    .top-user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 6px 14px 6px 6px;
+      border-radius: 30px;
+      transition: all 0.2s ease;
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.06) 0%, rgba(13, 148, 136, 0.06) 100%);
+      border: 1px solid var(--border);
+    }
+
+    .top-user-info:hover {
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.12) 0%, rgba(13, 148, 136, 0.12) 100%);
+    }
+
+    .welcome-text {
+      font-size: 13px;
+      color: var(--text-soft);
+      font-weight: 600;
+    }
+
+    .welcome-text strong {
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .top-user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      overflow: hidden;
     }
 
     .main-content {
@@ -879,6 +960,52 @@
       margin-bottom: 10px;
     }
 
+    .kpi-compact {
+      padding: 16px 18px;
+    }
+
+    .kpi-compact .kpi-label {
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .kpi-compact .kpi-value {
+      font-size: 22px;
+      margin-bottom: 0;
+    }
+
+    .alerts-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .alert-chip {
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .alert-chip:hover {
+      transform: translateY(-2px);
+    }
+
+    .alert-chip-warning {
+      background: rgba(180, 83, 9, 0.12);
+      color: var(--warning);
+      border: 1px solid rgba(180, 83, 9, 0.3);
+    }
+
+    .alert-chip-danger {
+      background: rgba(185, 28, 28, 0.12);
+      color: var(--danger);
+      border: 1px solid rgba(185, 28, 28, 0.3);
+    }
+
     .progress-bar {
       width: 100%;
       height: 8px;
@@ -919,6 +1046,84 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+    }
+
+    .excel-upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: var(--gray-100);
+    }
+
+    .excel-upload-zone:hover {
+      border-color: var(--primary);
+      background: rgba(29, 78, 216, 0.05);
+    }
+
+    .column-analysis-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .column-analysis-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .column-name {
+      font-weight: 800;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .column-type-badge {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: rgba(29, 78, 216, 0.1);
+      color: var(--primary);
+    }
+
+    .task-linear-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .task-linear-row:last-child {
+      border-bottom: none;
+    }
+
+    .task-linear-row:hover {
+      background: rgba(29, 78, 216, 0.04);
+    }
+
+    .task-linear-title {
+      flex: 1;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-linear-meta {
+      color: var(--text-soft);
+      font-size: 11px;
+      white-space: nowrap;
     }
 
     .data-card {
@@ -1051,6 +1256,45 @@
       align-items: center;
       gap: 16px;
       flex-wrap: wrap;
+    }
+
+    .settings-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .settings-tab {
+      background: transparent;
+      border: none;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-soft);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+      margin-bottom: -2px;
+    }
+
+    .settings-tab:hover {
+      color: var(--primary);
+    }
+
+    .settings-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .settings-tab-content {
+      display: none;
+    }
+
+    .settings-tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
     }
 
     .avatar-grid {
@@ -1264,6 +1508,21 @@
     .badge-done { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%); color: var(--success); }
     .badge-active { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%); color: var(--success); }
     .badge-inactive { background: linear-gradient(135deg, rgba(107, 114, 128, 0.2) 0%, rgba(107, 114, 128, 0.1) 100%); color: var(--gray-600); }
+
+    .beta-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+      -webkit-text-fill-color: white;
+      color: white;
+      vertical-align: middle;
+      margin-left: 8px;
+      box-shadow: 0 2px 6px rgba(29, 78, 216, 0.3);
+    }
 
     /* MODAL */
     .modal {
@@ -1499,7 +1758,7 @@
 <div class="login-container" id="loginPage">
   <div class="login-left">
     <div class="login-logo"><img src="Gokul_logo.jpg" alt="Gokul"></div>
-    <h1>Gokul Pipeline</h1>
+    <h1>Gokul Group</h1>
     <p>Advanced CRM Platform</p>
     <div class="feature-list">
       <div class="feature">
@@ -1541,6 +1800,9 @@
         </div>
         <button type="submit" class="login-btn">Sign In →</button>
       </form>
+      <div style="text-align: center; margin-top: 16px;">
+        <a href="javascript:void(0)" onclick="openForgotPassword()" style="color: var(--primary); font-size: 13px; font-weight: 700; text-decoration: none;">🔑 Forgot password?</a>
+      </div>
       <div class="demo-box">
         <div class="demo-label">🧪 Demo</div>
         <div class="demo-cred">Email: <code>test@test.com</code></div>
@@ -1550,14 +1812,42 @@
   </div>
 </div>
 
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal" id="forgotPasswordModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">🔑 Reset Password</h3>
+      <button class="modal-close" onclick="closeForgotPassword()">×</button>
+    </div>
+    <form onsubmit="submitForgotPassword(event)">
+      <div class="modal-body">
+        <div class="error-msg" id="forgotPasswordError"></div>
+        <div class="error-msg" id="forgotPasswordSuccess" style="background: rgba(21, 128, 61, 0.15); color: var(--success); border-left-color: var(--success);"></div>
+        <div class="form-group">
+          <label class="form-label">📧 Registered Email</label>
+          <input type="email" id="forgotEmail" class="form-input" placeholder="your@company.com" required>
+        </div>
+        <div style="font-size: 12px; color: var(--text-soft);">We'll generate a temporary password and send it to this email via the configured SMTP server.</div>
+        <div id="forgotPasswordResult"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeForgotPassword()">Cancel</button>
+        <button type="submit" class="btn-success">✓ Reset Password</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- APP -->
 <div class="app-wrapper hidden" id="appPage">
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Collapse sidebar">‹</button>
-      <div class="logo">
-        <span class="logo-icon"><img src="Gokul_logo.jpg" alt="Gokul"></span>
-        <span class="sidebar-label">Gokul</span>
+      <div class="sidebar-top-row">
+        <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Collapse sidebar">‹</button>
+        <div class="logo">
+          <span class="logo-icon"><img src="Gokul_logo.jpg" alt="Gokul"></span>
+          <span class="sidebar-label">Gokul</span>
+        </div>
       </div>
       <div class="ai-search-trigger" onclick="openAISearch()">
         <span class="ai-globe-ball"><span class="ai-globe-spin">🌐</span></span>
@@ -1591,6 +1881,14 @@
         <span>📝</span>
         <span class="sidebar-label">Activity</span>
       </button>
+      <button class="nav-item" onclick="showTab('reports')" title="Reports">
+        <span>🗂️</span>
+        <span class="sidebar-label">Reports</span>
+      </button>
+      <button class="nav-item" onclick="showTab('analysis')" title="Data Analysis">
+        <span>🧮</span>
+        <span class="sidebar-label">Data Analysis</span>
+      </button>
       <button class="nav-item" onclick="showTab('settings')" title="Settings">
         <span>⚙️</span>
         <span class="sidebar-label">Settings</span>
@@ -1598,16 +1896,6 @@
     </div>
 
     <div class="sidebar-footer">
-      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-        <span id="themeIcon">🌙</span>
-        <span id="themeText" class="sidebar-label">Dark Mode</span>
-      </button>
-      <div class="user-panel">
-        <button class="password-quick-btn sidebar-label" onclick="openPasswordChange()" title="Change Password">🔑</button>
-        <div class="user-avatar" id="userAvatarSmall">R</div>
-        <div class="user-name sidebar-label" id="displayName">User</div>
-        <div class="user-email sidebar-label" id="displayEmail">email@company.com</div>
-      </div>
       <button class="logout-btn" onclick="handleLogout()" title="Logout">
         <span>🚪</span>
         <span class="sidebar-label">Logout</span>
@@ -1616,75 +1904,52 @@
   </div>
 
   <div class="main-wrapper">
+    <div class="top-header">
+      <div></div>
+      <div class="top-header-right">
+        <button class="theme-toggle-mini" onclick="toggleTheme()" title="Toggle theme">
+          <span id="themeIcon">🌙</span>
+        </button>
+        <button class="password-quick-btn" onclick="openPasswordChange()" title="Change Password">🔑</button>
+        <div class="top-user-info" onclick="showTab('settings')" title="Go to Settings">
+          <div class="welcome-text">Welcome, <strong id="topUserName">User</strong></div>
+          <div class="top-user-avatar" id="topUserAvatar">U</div>
+        </div>
+      </div>
+    </div>
     <div class="main-content">
       <!-- DASHBOARD -->
       <div class="view active" id="dashboard">
         <div class="page-header">
           <div class="page-header-left">
             <h1>Dashboard</h1>
-            <div class="page-desc">Complete sales and performance overview</div>
+            <div class="page-desc">At-a-glance overview</div>
           </div>
         </div>
 
-        <!-- Main KPIs -->
+        <!-- Main KPIs (compact) -->
         <div class="stats-grid" id="mainKpis"></div>
 
-        <!-- Task and Lead Status -->
+        <!-- Alerts: reminders + escalations in one slim row -->
+        <div id="alertsBanner"></div>
+
+        <!-- Charts -->
         <div class="dashboard-grid">
           <div class="data-card">
-            <div class="card-header">📊 Task Status Breakdown</div>
+            <div class="card-header">📊 Task Status</div>
             <div class="card-content" id="taskStatusBreakdown"></div>
           </div>
 
           <div class="data-card">
-            <div class="card-header">📈 Lead Stage Distribution</div>
+            <div class="card-header">📈 Lead Pipeline</div>
             <div class="card-content" id="leadStageBreakdown"></div>
           </div>
         </div>
 
-        <!-- Lead Score and Source -->
-        <div class="dashboard-grid">
-          <div class="data-card">
-            <div class="card-header">⭐ Lead Score Analysis</div>
-            <div class="card-content" id="leadScoreBreakdown"></div>
-          </div>
-
-          <div class="data-card">
-            <div class="card-header">🎯 Lead Source Breakdown</div>
-            <div class="card-content" id="leadSourceBreakdown"></div>
-          </div>
-        </div>
-
-        <!-- Reminders and Escalations -->
-        <div class="dashboard-grid">
-          <div class="data-card">
-            <div class="card-header">🔔 Reminders & Follow-ups</div>
-            <div class="card-content" id="remindersPanel"></div>
-          </div>
-
-          <div class="data-card">
-            <div class="card-header">🚨 Escalated Tasks</div>
-            <div class="card-content" id="escalationsPanel"></div>
-          </div>
-        </div>
-
-        <!-- Upcoming and Recent -->
-        <div class="dashboard-grid">
-          <div class="data-card">
-            <div class="card-header">⏰ Upcoming Tasks (Next 7 Days)</div>
-            <div class="card-content" id="upcomingTasks"></div>
-          </div>
-
-          <div class="data-card">
-            <div class="card-header">🔥 Hot Leads</div>
-            <div class="card-content" id="hotLeads"></div>
-          </div>
-        </div>
-
-        <!-- Team Performance -->
+        <!-- Task Details (linear) -->
         <div class="data-card">
-          <div class="card-header">👥 Team Member Performance</div>
-          <div class="card-content" id="teamPerformance"></div>
+          <div class="card-header">✓ Task Details — Most Urgent</div>
+          <div class="card-content" id="taskLinearList"></div>
         </div>
       </div>
 
@@ -1714,7 +1979,13 @@
             <h1>Quotations</h1>
             <div class="page-desc">Auto-generated when a lead is marked Won — grouped by lead with full revision history</div>
           </div>
-          <input type="text" class="search-bar" id="quotationSearch" placeholder="🔍 Search quotations..." onkeyup="filterQuotations()">
+          <div style="display: flex; gap: 12px;">
+            <input type="text" class="search-bar" id="quotationSearch" placeholder="🔍 Search quotations..." onkeyup="filterQuotations()">
+            <button class="btn-primary" id="createQuoteBtn" onclick="openCreateQuoteModal()">
+              <span>➕</span>
+              <span>Create Quote</span>
+            </button>
+          </div>
         </div>
         <div class="stats-grid" id="quotationsKpis"></div>
         <div id="quotationsContainer"></div>
@@ -1800,6 +2071,107 @@
         <div id="auditContainer"></div>
       </div>
 
+      <!-- REPORTS -->
+      <div class="view" id="reports">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Reports</h1>
+            <div class="page-desc">Download CSV reports for offline analysis and record-keeping</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="data-card">
+            <div class="card-header">👤 Lead Generation Report</div>
+            <div class="card-content">
+              <div class="stat-item">
+                <div class="stat-label">Total Leads</div>
+                <div class="stat-value" id="reportLeadsCount">0</div>
+              </div>
+              <div style="font-size: 12px; color: var(--text-soft); margin: 12px 0;">Includes name, company, contact details, source, score, status, deal value, and assigned rep.</div>
+              <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="downloadLeadReport()">📥 Download CSV</button>
+            </div>
+          </div>
+
+          <div class="data-card">
+            <div class="card-header">💰 Quotation Report</div>
+            <div class="card-content">
+              <div class="stat-item">
+                <div class="stat-label">Total Quotations</div>
+                <div class="stat-value" id="reportQuotationsCount">0</div>
+              </div>
+              <div style="font-size: 12px; color: var(--text-soft); margin: 12px 0;">Includes quote number, revision, company, contact, value, status, issue and validity dates.</div>
+              <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="downloadQuotationReport()">📥 Download CSV</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="data-card">
+            <div class="card-header">✓ Task Report</div>
+            <div class="card-content">
+              <div class="stat-item">
+                <div class="stat-label">Total Tasks</div>
+                <div class="stat-value" id="reportTasksCount">0</div>
+              </div>
+              <div style="font-size: 12px; color: var(--text-soft); margin: 12px 0;">Includes title, status, assignee, due date, follow-up date, and escalation status.</div>
+              <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="downloadTaskReport()">📥 Download CSV</button>
+            </div>
+          </div>
+
+          <div class="data-card">
+            <div class="card-header">📝 Activity Report</div>
+            <div class="card-content">
+              <div class="stat-item">
+                <div class="stat-label">Total Activity Entries</div>
+                <div class="stat-value" id="reportAuditCount">0</div>
+              </div>
+              <div style="font-size: 12px; color: var(--text-soft); margin: 12px 0;">Includes action, performed by, entity type, entity name, and timestamp.</div>
+              <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="downloadAuditReport()">📥 Download CSV</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="data-card">
+            <div class="card-header">👥 User Report</div>
+            <div class="card-content">
+              <div class="stat-item">
+                <div class="stat-label">Total Users</div>
+                <div class="stat-value" id="reportUsersCount">0</div>
+              </div>
+              <div style="font-size: 12px; color: var(--text-soft); margin: 12px 0;">Includes name, email, role, department, designation, status, and escalation contact.</div>
+              <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="downloadUserReport()">📥 Download CSV</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATA ANALYSIS -->
+      <div class="view" id="analysis">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Data Analysis <span class="beta-badge">BETA</span></h1>
+            <div class="page-desc">Upload an Excel/CSV file and get instant column-level analysis</div>
+          </div>
+        </div>
+
+        <div class="data-card" style="margin-bottom: 20px;">
+          <div class="card-header">📁 Upload File</div>
+          <div class="card-content">
+            <div class="excel-upload-zone" onclick="document.getElementById('excelFileInput').click()">
+              <div style="font-size: 32px; margin-bottom: 8px;">📤</div>
+              <div style="font-weight: 700; color: var(--text);">Click to upload Excel or CSV file</div>
+              <div style="font-size: 12px; color: var(--text-soft); margin-top: 4px;">.xlsx, .xls, .csv supported — processed entirely in your browser, nothing is uploaded anywhere</div>
+            </div>
+            <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" onchange="handleExcelUpload(event)" style="display: none;">
+            <div id="excelUploadStatus"></div>
+          </div>
+        </div>
+
+        <div id="excelAnalysisResults"></div>
+      </div>
+
       <!-- SETTINGS -->
       <div class="view" id="settings">
         <div class="page-header">
@@ -1809,19 +2181,91 @@
           </div>
         </div>
 
-        <div class="data-card" style="margin-bottom: 20px;">
-          <div class="card-header">🖼️ Choose Your Avatar</div>
-          <div class="card-content">
-            <div class="avatar-picker-row">
-              <div id="settingsAvatarPreview" style="width: 48px; height: 48px; min-width: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; overflow: hidden;">U</div>
-              <div id="avatarGrid" class="avatar-grid"></div>
-              <input type="file" id="settingsProfilePicInput" accept="image/*" onchange="handleProfilePicChange(event)" style="display: none;">
-              <button type="button" class="btn-cancel" style="padding: 8px 14px; font-size: 11px;" onclick="document.getElementById('settingsProfilePicInput').click()">📷 Upload</button>
+        <div class="settings-tabs">
+          <button class="settings-tab active" id="settingsTabBtn_profile" onclick="showSettingsTab('profile')">👤 Profile</button>
+          <button class="settings-tab" id="settingsTabBtn_security" onclick="showSettingsTab('security')">🔒 Security</button>
+          <button class="settings-tab" id="settingsTabBtn_appearance" onclick="showSettingsTab('appearance')">🎨 Appearance</button>
+          <button class="settings-tab" id="settingsTabBtn_company" onclick="showSettingsTab('company')" style="display: none;">🏢 Company</button>
+          <button class="settings-tab" id="settingsTabBtn_smtp" onclick="showSettingsTab('smtp')" style="display: none;">✉️ SMTP</button>
+        </div>
+
+        <!-- PROFILE TAB -->
+        <div class="settings-tab-content active" id="settingsTab_profile">
+          <div class="data-card" style="margin-bottom: 20px;">
+            <div class="card-header">🖼️ Choose Your Avatar</div>
+            <div class="card-content">
+              <div class="avatar-picker-row">
+                <div id="settingsAvatarPreview" style="width: 48px; height: 48px; min-width: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; overflow: hidden;">U</div>
+                <div id="avatarGrid" class="avatar-grid"></div>
+                <input type="file" id="settingsProfilePicInput" accept="image/*" onchange="handleProfilePicChange(event)" style="display: none;">
+                <button type="button" class="btn-cancel" style="padding: 8px 14px; font-size: 11px;" onclick="document.getElementById('settingsProfilePicInput').click()">📷 Upload</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="data-card">
+            <div class="card-header">👤 Profile Details</div>
+            <div class="card-content">
+              <form onsubmit="saveProfileDetails(event)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">👤 Full Name</label>
+                    <input type="text" id="settingsName" class="form-input" required>
+                    <div id="settingsNameHint" style="display: none; font-size: 11px; color: var(--text-soft); margin-top: 6px;">🔒 Only an Admin can change your name</div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">📧 Email</label>
+                    <input type="email" id="settingsEmail" class="form-input" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">🏬 Department</label>
+                    <input type="text" id="settingsDepartment" class="form-input" placeholder="Sales, Marketing, etc">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">💼 Designation</label>
+                    <input type="text" id="settingsDesignation" class="form-input" placeholder="Sales Manager, Sales Rep, etc">
+                  </div>
+                </div>
+                <button type="submit" class="btn-success">✓ Save Profile</button>
+              </form>
             </div>
           </div>
         </div>
 
-        <div class="dashboard-grid">
+        <!-- SECURITY TAB -->
+        <div class="settings-tab-content" id="settingsTab_security">
+          <div class="data-card" id="changePasswordCard">
+            <div class="card-header">🔒 Change Password</div>
+            <div class="card-content">
+              <form onsubmit="changePassword(event)">
+                <div id="passwordChangeError" class="error-msg"></div>
+                <div id="passwordChangeSuccess" class="error-msg" style="background: rgba(21, 128, 61, 0.15); color: var(--success); border-left-color: var(--success);"></div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">🔑 Current Password</label>
+                    <input type="password" id="currentPassword" class="form-input" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">🔒 New Password</label>
+                    <input type="password" id="newPassword" class="form-input" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">🔒 Confirm New Password</label>
+                    <input type="password" id="confirmPassword" class="form-input" required>
+                  </div>
+                </div>
+                <button type="submit" class="btn-success">✓ Update Password</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- APPEARANCE TAB -->
+        <div class="settings-tab-content" id="settingsTab_appearance">
           <div class="data-card">
             <div class="card-header">🎨 Appearance</div>
             <div class="card-content">
@@ -1836,60 +2280,124 @@
           </div>
         </div>
 
-        <div class="data-card" style="margin-bottom: 20px;">
-          <div class="card-header">👤 Profile Details</div>
-          <div class="card-content">
-            <form onsubmit="saveProfileDetails(event)">
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">👤 Full Name</label>
-                  <input type="text" id="settingsName" class="form-input" required>
-                  <div id="settingsNameHint" style="display: none; font-size: 11px; color: var(--text-soft); margin-top: 6px;">🔒 Only an Admin can change your name</div>
+        <!-- COMPANY TAB (Admin only) -->
+        <div class="settings-tab-content" id="settingsTab_company">
+          <div class="data-card">
+            <div class="card-header">🏢 Company Master Details</div>
+            <div class="card-content">
+              <div id="companySaveSuccess" class="error-msg" style="background: rgba(21, 128, 61, 0.15); color: var(--success); border-left-color: var(--success);"></div>
+              <div style="font-size: 12px; color: var(--text-soft); margin-bottom: 16px;">These details are used as the official letterhead on all printed documents (quotations, reports, etc).</div>
+              <form onsubmit="saveCompanySettings(event)">
+                <div class="avatar-picker-row" style="margin-bottom: 20px;">
+                  <div id="companyLogoPreview" style="width: 64px; height: 64px; min-width: 64px; border-radius: 12px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border);">
+                    <img src="Gokul_logo.jpg" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+                  </div>
+                  <input type="file" id="companyLogoInput" accept="image/*" onchange="handleCompanyLogoChange(event)" style="display: none;">
+                  <button type="button" class="btn-cancel" style="padding: 8px 14px; font-size: 11px;" onclick="document.getElementById('companyLogoInput').click()">📷 Change Letterhead Logo</button>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">🏢 Company Name</label>
+                    <input type="text" id="companyName" class="form-input" placeholder="Gokul Group Pvt. Ltd." required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">🏷️ Tagline</label>
+                    <input type="text" id="companyTagline" class="form-input" placeholder="Advanced CRM Platform">
+                  </div>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">📧 Email</label>
-                  <input type="email" id="settingsEmail" class="form-input" required>
+                  <label class="form-label">📍 Address</label>
+                  <textarea id="companyAddress" class="form-textarea" placeholder="Street, City, State, PIN Code" style="min-height: 60px;"></textarea>
                 </div>
-              </div>
-              <div class="form-row">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">📞 Phone</label>
+                    <input type="text" id="companyPhone" class="form-input" placeholder="+91 98765 43210">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">📧 Email</label>
+                    <input type="email" id="companyEmail" class="form-input" placeholder="contact@yourcompany.com">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">🌐 Website</label>
+                    <input type="url" id="companyWebsite" class="form-input" placeholder="www.yourcompany.com">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">🧾 GSTIN / Tax ID</label>
+                    <input type="text" id="companyGstin" class="form-input" placeholder="22AAAAA0000A1Z5">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">🏦 Bank Name & Account No.</label>
+                    <input type="text" id="companyBank" class="form-input" placeholder="HDFC Bank — 1234567890">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">🔢 IFSC Code</label>
+                    <input type="text" id="companyIfsc" class="form-input" placeholder="HDFC0001234">
+                  </div>
+                </div>
                 <div class="form-group">
-                  <label class="form-label">🏬 Department</label>
-                  <input type="text" id="settingsDepartment" class="form-input" placeholder="Sales, Marketing, etc">
+                  <label class="form-label">✍️ Authorized Signatory Name</label>
+                  <input type="text" id="companySignatory" class="form-input" placeholder="Name to appear on signature line">
                 </div>
-                <div class="form-group">
-                  <label class="form-label">💼 Designation</label>
-                  <input type="text" id="settingsDesignation" class="form-input" placeholder="Sales Manager, Sales Rep, etc">
-                </div>
-              </div>
-              <button type="submit" class="btn-success">✓ Save Profile</button>
-            </form>
+                <button type="submit" class="btn-success">✓ Save Company Details</button>
+              </form>
+            </div>
           </div>
         </div>
 
-        <div class="data-card" id="changePasswordCard">
-          <div class="card-header">🔒 Change Password</div>
-          <div class="card-content">
-            <form onsubmit="changePassword(event)">
-              <div id="passwordChangeError" class="error-msg"></div>
-              <div id="passwordChangeSuccess" class="error-msg" style="background: rgba(21, 128, 61, 0.15); color: var(--success); border-left-color: var(--success);"></div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">🔑 Current Password</label>
-                  <input type="password" id="currentPassword" class="form-input" required>
+        <!-- SMTP TAB (Admin only) -->
+        <div class="settings-tab-content" id="settingsTab_smtp">
+          <div class="data-card" id="smtpSettingsCard">
+            <div class="card-header">✉️ SMTP Settings (Admin Only)</div>
+            <div class="card-content">
+              <div id="smtpSaveSuccess" class="error-msg" style="background: rgba(21, 128, 61, 0.15); color: var(--success); border-left-color: var(--success);"></div>
+              <form onsubmit="saveSmtpSettings(event)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">🌐 SMTP Host</label>
+                    <input type="text" id="smtpHost" class="form-input" placeholder="smtp.gmail.com">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">🔌 Port</label>
+                    <input type="number" id="smtpPort" class="form-input" placeholder="587">
+                  </div>
                 </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">🔒 New Password</label>
-                  <input type="password" id="newPassword" class="form-input" required>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">👤 Username</label>
+                    <input type="text" id="smtpUsername" class="form-input" placeholder="noreply@yourcompany.com">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">🔒 Password</label>
+                    <input type="password" id="smtpPassword" class="form-input" placeholder="App password / SMTP password">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">📧 From Email</label>
+                    <input type="email" id="smtpFromEmail" class="form-input" placeholder="noreply@yourcompany.com">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">🏷️ From Name</label>
+                    <input type="text" id="smtpFromName" class="form-input" placeholder="Gokul Group CRM">
+                  </div>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">🔒 Confirm New Password</label>
-                  <input type="password" id="confirmPassword" class="form-input" required>
+                  <label class="form-label">🔐 Encryption</label>
+                  <select id="smtpEncryption" class="form-select">
+                    <option value="TLS">TLS (Recommended)</option>
+                    <option value="SSL">SSL</option>
+                    <option value="None">None</option>
+                  </select>
                 </div>
-              </div>
-              <button type="submit" class="btn-success">✓ Update Password</button>
-            </form>
+                <div style="font-size: 11px; color: var(--text-soft); margin-bottom: 16px;">⚠️ This is a static front-end app with no backend — these settings are stored locally for reference only and won't actually send emails. Connect a backend/serverless mail relay to make this functional.</div>
+                <button type="submit" class="btn-success">✓ Save SMTP Settings</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -1998,6 +2506,32 @@
   </div>
 </div>
 
+<!-- Create Quote Modal -->
+<div class="modal" id="createQuoteModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">➕ Create Quote</h3>
+      <button class="modal-close" onclick="closeCreateQuoteModal()">×</button>
+    </div>
+    <form onsubmit="submitCreateQuote(event)">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">👤 Select Lead</label>
+          <select id="createQuoteLead" class="form-select" required onchange="previewCreateQuoteLead()">
+            <option value="">Choose a lead...</option>
+          </select>
+          <div style="font-size: 11px; color: var(--text-soft); margin-top: 6px;">Company, contact, and deal details are auto-fetched from the selected lead. A new revision is created if quotes already exist for this lead.</div>
+        </div>
+        <div id="createQuotePreview"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeCreateQuoteModal()">Cancel</button>
+        <button type="submit" class="btn-success">✓ Create Quote</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Edit Quotation Modal -->
 <div class="modal" id="quotationModal">
   <div class="modal-content">
@@ -2036,6 +2570,10 @@
             <label class="form-label">📅 Valid Till</label>
             <input type="date" id="quoteValidTill" class="form-input" required>
           </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">📦 Products / Services</label>
+          <input type="text" id="quoteProducts" class="form-input" placeholder="e.g. CRM License, Implementation Support">
         </div>
         <div class="form-group">
           <label class="form-label">📊 Status</label>
@@ -2136,6 +2674,7 @@
   </div>
 </div>
 
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script>
 (function() {
   let currentUser = null;
@@ -2150,8 +2689,8 @@
 
   // THEME
   function setThemeLabels(icon, text) {
-    document.getElementById('themeIcon').textContent = icon;
-    document.getElementById('themeText').textContent = text;
+    const themeIcon = document.getElementById('themeIcon');
+    if (themeIcon) themeIcon.textContent = icon;
     const sIcon = document.getElementById('settingsThemeIcon');
     const sText = document.getElementById('settingsThemeText');
     if (sIcon) sIcon.textContent = icon;
@@ -2249,7 +2788,7 @@
     auditLogs.unshift({
       id: Date.now(),
       action: action,
-      user: currentUser.name,
+      user: currentUser ? currentUser.name : 'System',
       entity: entity,
       entityName: entityName,
       timestamp: new Date()
@@ -2281,6 +2820,110 @@
     renderAll();
   };
 
+  // FORGOT PASSWORD
+  window.openForgotPassword = function() {
+    document.getElementById('forgotEmail').value = document.getElementById('email').value || '';
+    document.getElementById('forgotPasswordError').classList.remove('show');
+    document.getElementById('forgotPasswordSuccess').classList.remove('show');
+    document.getElementById('forgotPasswordResult').innerHTML = '';
+    document.getElementById('forgotPasswordModal').classList.add('active');
+  };
+
+  window.closeForgotPassword = function() {
+    document.getElementById('forgotPasswordModal').classList.remove('active');
+  };
+
+  function genTempPassword() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+    let pwd = '';
+    for (let i = 0; i < 10; i++) pwd += chars[Math.floor(Math.random() * chars.length)];
+    return pwd + '!';
+  }
+
+  window.submitForgotPassword = function(e) {
+    e.preventDefault();
+    const email = document.getElementById('forgotEmail').value.trim();
+    const errorEl = document.getElementById('forgotPasswordError');
+    const successEl = document.getElementById('forgotPasswordSuccess');
+    errorEl.classList.remove('show');
+    successEl.classList.remove('show');
+
+    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    if (!user) {
+      errorEl.textContent = '❌ No account found with this email';
+      errorEl.classList.add('show');
+      return;
+    }
+
+    const tempPassword = genTempPassword();
+    const idx = users.findIndex(u => u.id === user.id);
+    users[idx].password = tempPassword;
+    saveToStorage();
+    addAuditLog('Password Reset', 'User', user.name);
+
+    const smtp = getSmtpSettings();
+    successEl.innerHTML = smtp.host
+      ? `✓ A password reset email has been sent to <strong>${email}</strong> via ${smtp.host}.`
+      : `✓ Temporary password generated. SMTP is not configured, so it cannot be emailed — here it is instead:`;
+    successEl.classList.add('show');
+
+    document.getElementById('forgotPasswordResult').innerHTML = `
+      <div class="demo-box" style="margin-top: 16px;">
+        <div class="demo-label">🔑 Temporary Password</div>
+        <div class="demo-cred">Use this to sign in: <code>${tempPassword}</code></div>
+        <div class="demo-cred" style="margin-top: 8px;">Change it from Settings → Change Password after logging in.</div>
+      </div>
+    `;
+  };
+
+  function getSmtpSettings() {
+    return JSON.parse(localStorage.getItem('gokul_smtp_settings')) || { host: '', port: '', username: '', password: '', fromEmail: '', fromName: '', encryption: 'TLS' };
+  }
+
+  function getCompanySettings() {
+    return JSON.parse(localStorage.getItem('gokul_company_settings')) || {
+      name: 'Gokul Group', tagline: 'Advanced CRM Platform', address: '', phone: '', email: '',
+      website: '', gstin: '', bank: '', ifsc: '', signatory: '', logo: ''
+    };
+  }
+
+  window.handleCompanyLogoChange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const dataUrl = evt.target.result;
+      document.getElementById('companyLogoPreview').innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;">`;
+      const settings = getCompanySettings();
+      settings.logo = dataUrl;
+      localStorage.setItem('gokul_company_settings', JSON.stringify(settings));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.saveCompanySettings = function(e) {
+    e.preventDefault();
+    const existing = getCompanySettings();
+    const settings = {
+      name: document.getElementById('companyName').value,
+      tagline: document.getElementById('companyTagline').value,
+      address: document.getElementById('companyAddress').value,
+      phone: document.getElementById('companyPhone').value,
+      email: document.getElementById('companyEmail').value,
+      website: document.getElementById('companyWebsite').value,
+      gstin: document.getElementById('companyGstin').value,
+      bank: document.getElementById('companyBank').value,
+      ifsc: document.getElementById('companyIfsc').value,
+      signatory: document.getElementById('companySignatory').value,
+      logo: existing.logo || ''
+    };
+    localStorage.setItem('gokul_company_settings', JSON.stringify(settings));
+    addAuditLog('Updated Company Details', 'Settings', settings.name);
+    const successEl = document.getElementById('companySaveSuccess');
+    successEl.textContent = '✓ Company details saved';
+    successEl.classList.add('show');
+  };
+
   function isAdmin() {
     return !!currentUser && currentUser.role === 'Admin';
   }
@@ -2290,6 +2933,8 @@
     if (navUsers) navUsers.style.display = isAdmin() ? '' : 'none';
     const addUserBtn = document.getElementById('addUserBtn');
     if (addUserBtn) addUserBtn.style.display = isAdmin() ? '' : 'none';
+    const createQuoteBtn = document.getElementById('createQuoteBtn');
+    if (createQuoteBtn) createQuoteBtn.style.display = isAdmin() ? '' : 'none';
   }
 
   const avatarList = [
@@ -2328,9 +2973,8 @@
   }
 
   function updateUserPanel() {
-    document.getElementById('displayName').textContent = currentUser.name;
-    document.getElementById('displayEmail').textContent = currentUser.email;
-    applyAvatarToElement(document.getElementById('userAvatarSmall'), currentUser);
+    document.getElementById('topUserName').textContent = currentUser.name;
+    applyAvatarToElement(document.getElementById('topUserAvatar'), currentUser);
   }
 
   window.handleLogout = function() {
@@ -2354,6 +2998,7 @@
       if (navBtn) navBtn.classList.add('active');
     }
     if (tab === 'settings') renderSettings();
+    if (tab === 'reports') renderReports();
   };
 
   window.openPasswordChange = function() {
@@ -2427,7 +3072,7 @@
     // Leads (search every field)
     leads.forEach(l => {
       const user = users.find(u => u.id === l.assignedTo);
-      const haystack = [l.name, l.email, l.phone, l.company, l.industry, l.source, l.status, l.score, l.notes, user ? user.name : ''].filter(Boolean).join(' ').toLowerCase();
+      const haystack = [l.name, l.email, l.phone, l.company, l.industry, l.source, l.status, l.score, l.notes, l.products, user ? user.name : ''].filter(Boolean).join(' ').toLowerCase();
       if (haystack.includes(q)) {
         results.push({
           type: '👤 Lead',
@@ -2552,6 +3197,10 @@
           </div>
         </div>
         <div class="form-group">
+          <label class="form-label">📦 Products / Services</label>
+          <input type="text" id="leadProducts_${idx}" class="form-input" placeholder="e.g. CRM License, Implementation Support" value="${data.products || ''}">
+        </div>
+        <div class="form-group">
           <label class="form-label">📝 Notes</label>
           <textarea id="leadNotes_${idx}" class="form-textarea" placeholder="Additional information..." style="min-height: 70px;">${data.notes || ''}</textarea>
         </div>
@@ -2610,6 +3259,7 @@
         score: document.getElementById('leadScore_0').value,
         closeDate: document.getElementById('leadCloseDate_0').value,
         assignedTo: parseInt(document.getElementById('leadAssignedTo_0').value),
+        products: document.getElementById('leadProducts_0').value,
         notes: document.getElementById('leadNotes_0').value,
         date: editingLead.date
       };
@@ -2637,6 +3287,7 @@
           score: document.getElementById('leadScore_' + idx).value,
           closeDate: document.getElementById('leadCloseDate_' + idx).value,
           assignedTo: parseInt(document.getElementById('leadAssignedTo_' + idx).value),
+          products: document.getElementById('leadProducts_' + idx).value,
           notes: document.getElementById('leadNotes_' + idx).value,
           date: new Date().toISOString().split('T')[0]
         };
@@ -2658,7 +3309,7 @@
     const existingForLead = quotations.filter(q => q.leadId === lead.id);
     const revision = existingForLead.length + 1;
     const baseSeq = quotations.length + 1;
-    const quoteNo = 'QTN-' + new Date().getFullYear() + '-' + String(baseSeq).padStart(4, '0') + (revision > 1 ? '-R' + revision : '');
+    const quoteNo = 'QTN-' + new Date().getFullYear() + '-' + String(baseSeq).padStart(4, '0') + '-R' + String(revision).padStart(2, '0');
     const issueDate = new Date().toISOString().split('T')[0];
     const validTill = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     const quotation = {
@@ -2673,6 +3324,7 @@
       email: lead.email,
       phone: lead.phone,
       value: lead.value,
+      products: lead.products || '',
       assignedTo: lead.assignedTo,
       status: 'Draft',
       issueDate: issueDate,
@@ -2691,6 +3343,180 @@
     convertLeadToQuotation(lead);
     saveToStorage();
     renderQuotations();
+  };
+
+  window.printQuotation = function(id) {
+    const q = quotations.find(x => x.id === id);
+    if (!q) return;
+    const preparedBy = users.find(u => u.id === q.assignedTo);
+    const gst = (q.value * 0.18);
+    const totalWithTax = q.value + gst;
+    const company = getCompanySettings();
+    const companyContactLine = [company.address, company.phone, company.email, company.website].filter(Boolean).join(' • ');
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>${q.quoteNo} - ${q.company}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #111827; padding: 50px; max-width: 800px; margin: 0 auto; }
+          .quote-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #1d4ed8; padding-bottom: 20px; margin-bottom: 30px; }
+          .quote-header-left { display: flex; align-items: center; gap: 14px; }
+          .quote-header-left img { width: 56px; height: 56px; border-radius: 10px; }
+          .company-title { font-size: 24px; font-weight: 800; color: #1d4ed8; }
+          .company-tagline { font-size: 12px; color: #6b7280; margin-top: 2px; }
+          .company-contact-line { font-size: 11px; color: #6b7280; margin-top: 16px; }
+          .quote-header-right { text-align: right; }
+          .quote-title { font-size: 26px; font-weight: 800; color: #111827; }
+          .quote-meta { font-size: 13px; color: #6b7280; margin-top: 6px; }
+          .section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; margin-bottom: 8px; }
+          .billto-row { display: flex; justify-content: space-between; margin-bottom: 30px; gap: 40px; }
+          .billto-box { flex: 1; }
+          .billto-box div { font-size: 14px; margin-bottom: 4px; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+          th { background: #f3f4f6; text-align: left; padding: 12px; font-size: 12px; text-transform: uppercase; color: #374151; border-bottom: 2px solid #e5e7eb; }
+          td { padding: 14px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+          .totals-row { display: flex; justify-content: flex-end; }
+          .totals-table { width: 280px; }
+          .totals-table div { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
+          .totals-table .grand-total { border-top: 2px solid #1d4ed8; font-weight: 800; font-size: 16px; color: #1d4ed8; }
+          .status-badge { display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: #e0e7ff; color: #1d4ed8; }
+          .terms { margin-top: 40px; font-size: 12px; color: #6b7280; }
+          .terms div { margin-bottom: 6px; }
+          .signature-row { display: flex; justify-content: space-between; margin-top: 60px; }
+          .signature-box { width: 220px; text-align: center; border-top: 1px solid #9ca3af; padding-top: 8px; font-size: 12px; color: #6b7280; }
+          @media print { body { padding: 20px; } }
+        </style>
+      </head>
+      <body>
+        <div class="quote-header">
+          <div class="quote-header-left">
+            <img src="${company.logo || 'Gokul_logo.jpg'}" alt="${company.name}">
+            <div>
+              <div class="company-title">${(company.name || 'Gokul Group').toUpperCase()}</div>
+              ${company.tagline ? `<div class="company-tagline">${company.tagline}</div>` : ''}
+            </div>
+          </div>
+          <div class="quote-header-right">
+            <div class="quote-title">QUOTATION</div>
+            <div class="quote-meta">${q.quoteNo} (R${String(q.revision).padStart(2, '0')})</div>
+            <div style="margin-top: 8px;"><span class="status-badge">${q.status}</span></div>
+          </div>
+        </div>
+        ${companyContactLine ? `<div class="company-contact-line">${companyContactLine}${company.gstin ? ' • GSTIN: ' + company.gstin : ''}</div>` : ''}
+
+        <div class="billto-row">
+          <div class="billto-box">
+            <div class="section-title">Bill To</div>
+            <div><strong>${q.company}</strong></div>
+            <div>${q.contactName}</div>
+            <div>${q.email || ''}</div>
+            <div>${q.phone || ''}</div>
+          </div>
+          <div class="billto-box" style="text-align: right;">
+            <div class="section-title">Quote Details</div>
+            <div>Issue Date: <strong>${q.issueDate}</strong></div>
+            <div>Valid Till: <strong>${q.validTill}</strong></div>
+            <div>Prepared By: <strong>${preparedBy ? preparedBy.name : '—'}</strong></div>
+          </div>
+        </div>
+
+        <div class="section-title">Products / Services</div>
+        <table>
+          <thead>
+            <tr><th>Description</th><th style="text-align: right;">Amount (₹)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>${q.products || 'Products / Services as discussed'}${q.notes ? `<br><span style="font-size: 12px; color: #6b7280;">${q.notes}</span>` : ''}</td>
+              <td style="text-align: right;">${q.value.toLocaleString()}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="totals-row">
+          <div class="totals-table">
+            <div><span>Subtotal</span><span>₹${q.value.toLocaleString()}</span></div>
+            <div><span>GST (18%)</span><span>₹${gst.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span></div>
+            <div class="grand-total"><span>Total</span><span>₹${totalWithTax.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span></div>
+          </div>
+        </div>
+
+        <div class="terms">
+          <div class="section-title">Terms & Conditions</div>
+          <div>1. This quotation is valid until ${q.validTill}.</div>
+          <div>2. Prices are subject to applicable taxes as shown above.</div>
+          <div>3. Payment terms: 50% advance, balance on delivery, unless otherwise agreed in writing.</div>
+          ${(company.bank || company.ifsc) ? `<div>4. Bank Details: ${[company.bank, company.ifsc].filter(Boolean).join(', IFSC: ')}</div>` : ''}
+          <div>${(company.bank || company.ifsc) ? '5' : '4'}. This is a system-generated quotation from ${company.name || 'Gokul Group'} CRM.</div>
+        </div>
+
+        <div class="signature-row">
+          <div class="signature-box">${company.signatory ? company.signatory + '<br>' : 'Authorized Signatory<br>'}${company.name || 'Gokul Group'}</div>
+          <div class="signature-box">Customer Acceptance<br>${q.company}</div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.onload = function() {
+      printWindow.focus();
+      printWindow.print();
+    };
+  };
+
+  window.openCreateQuoteModal = function() {
+    if (!isAdmin()) { alert('🔒 Only an Admin can create quotes'); return; }
+    const select = document.getElementById('createQuoteLead');
+    select.innerHTML = '<option value="">Choose a lead...</option>' +
+      leads.map(l => `<option value="${l.id}">${l.name} — ${l.company}</option>`).join('');
+    document.getElementById('createQuotePreview').innerHTML = '';
+    document.getElementById('createQuoteModal').classList.add('active');
+  };
+
+  window.closeCreateQuoteModal = function() {
+    document.getElementById('createQuoteModal').classList.remove('active');
+  };
+
+  window.previewCreateQuoteLead = function() {
+    const leadId = parseInt(document.getElementById('createQuoteLead').value);
+    const preview = document.getElementById('createQuotePreview');
+    const lead = leads.find(l => l.id === leadId);
+    if (!lead) { preview.innerHTML = ''; return; }
+    const existingCount = quotations.filter(q => q.leadId === lead.id).length;
+    const nextRevision = String(existingCount + 1).padStart(2, '0');
+    preview.innerHTML = `
+      <div class="lead-row-box">
+        <div style="font-size: 12px; color: var(--text-soft); margin-bottom: 8px; font-weight: 700;">📋 Auto-fetched from lead (will be created as R${nextRevision})</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; font-size: 13px;">
+          <div><strong>🏢 Company:</strong> ${lead.company}</div>
+          <div><strong>👤 Contact:</strong> ${lead.name}</div>
+          <div><strong>📧 Email:</strong> ${lead.email || '—'}</div>
+          <div><strong>📞 Phone:</strong> ${lead.phone || '—'}</div>
+          <div><strong>💰 Value:</strong> ₹${(lead.value || 0).toLocaleString()}</div>
+          <div><strong>📊 Status:</strong> ${lead.status}</div>
+          <div><strong>📦 Products:</strong> ${lead.products || '—'}</div>
+        </div>
+      </div>
+    `;
+  };
+
+  window.submitCreateQuote = function(e) {
+    e.preventDefault();
+    const leadId = parseInt(document.getElementById('createQuoteLead').value);
+    const lead = leads.find(l => l.id === leadId);
+    if (!lead) return;
+    const quotation = convertLeadToQuotation(lead);
+    saveToStorage();
+    closeCreateQuoteModal();
+    renderQuotations();
+    showTab('quotations');
   };
 
   window.editLead = function(id) {
@@ -2936,243 +3762,151 @@
     return map[score] || 'badge-cold';
   }
 
+  // CHART HELPERS (hand-rolled SVG, no external library)
+  const chartPalette = ['#1d4ed8', '#0d9488', '#f59e0b', '#a855f7', '#ef4444', '#3b82f6', '#22c55e', '#ec4899'];
+
+  function buildBarChart(entries) {
+    const max = Math.max(1, ...entries.map(e => e.count));
+    const w = 320, h = 150, barGap = 14;
+    const barW = entries.length > 0 ? (w - barGap * (entries.length + 1)) / entries.length : 0;
+    const gridLines = [0.25, 0.5, 0.75].map(f => {
+      const y = 20 + (h - 30) * f;
+      return `<line x1="0" y1="${y}" x2="${w}" y2="${y}" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>`;
+    }).join('');
+    const defs = entries.map((e, i) => {
+      const color = e.color || chartPalette[i % chartPalette.length];
+      return `<linearGradient id="barGrad${i}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${color}" stop-opacity="1"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0.65"/>
+      </linearGradient>`;
+    }).join('');
+    const bars = entries.map((e, i) => {
+      const barH = (e.count / max) * (h - 30);
+      const x = barGap + i * (barW + barGap);
+      const y = h - barH - 20;
+      return `
+        <rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="6" fill="url(#barGrad${i})">
+          <title>${e.label}: ${e.count}</title>
+        </rect>
+        <text x="${x + barW / 2}" y="${y - 6}" font-size="11" font-weight="700" fill="var(--text)" text-anchor="middle">${e.count}</text>
+        <text x="${x + barW / 2}" y="${h - 4}" font-size="9" fill="var(--text-soft)" text-anchor="middle">${e.label.length > 10 ? e.label.slice(0, 9) + '…' : e.label}</text>
+      `;
+    }).join('');
+    const legend = `
+      <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 8px;">
+        ${entries.map((e, i) => `
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 11px;">
+            <span style="width: 9px; height: 9px; border-radius: 2px; background: ${e.color || chartPalette[i % chartPalette.length]}; display: inline-block;"></span>
+            <span style="color: var(--text-soft);">${e.label}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    return `<svg viewBox="0 0 ${w} ${h}" style="width: 100%; height: 160px;"><defs>${defs}</defs>${gridLines}${bars}</svg>${legend}`;
+  }
+
+  function buildDonutChart(entries, centerLabel) {
+    const total = entries.reduce((s, e) => s + e.count, 0) || 1;
+    const size = 140, r = 52, cx = size / 2, cy = size / 2;
+    const circumference = 2 * Math.PI * r;
+    let offset = 0;
+    const segments = entries.map((e, i) => {
+      const frac = e.count / total;
+      const dash = frac * circumference;
+      const color = e.color || chartPalette[i % chartPalette.length];
+      const seg = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color}" stroke-width="20"
+        stroke-dasharray="${dash} ${circumference - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})">
+        <title>${e.label}: ${e.count} (${(frac*100).toFixed(0)}%)</title>
+      </circle>`;
+      offset += dash;
+      return seg;
+    }).join('');
+    return `
+      <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+        <svg viewBox="0 0 ${size} ${size}" style="width: 140px; height: 140px; flex-shrink: 0;">
+          ${segments}
+          <text x="${cx}" y="${cy - 4}" font-size="20" font-weight="800" fill="var(--text)" text-anchor="middle">${total}</text>
+          <text x="${cx}" y="${cy + 14}" font-size="9" fill="var(--text-soft)" text-anchor="middle">${centerLabel || 'Total'}</text>
+        </svg>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${entries.map((e, i) => `
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+              <span style="width: 10px; height: 10px; border-radius: 3px; background: ${e.color || chartPalette[i % chartPalette.length]}; display: inline-block;"></span>
+              <span style="color: var(--text);">${e.label}</span>
+              <span style="color: var(--text-soft); font-weight: 700;">${e.count}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   function renderDashboard() {
     checkEscalations();
 
-    // Main KPIs
+    // Main KPIs (compact — 4 most important numbers only)
     const total = leads.length;
     const won = leads.filter(l => l.status === 'Won').length;
-    const hot = leads.filter(l => l.score === 'Hot').length;
     const pipeline = leads.reduce((sum, l) => sum + l.value, 0);
-    const activeLeads = leads.filter(l => l.status !== 'Won' && l.status !== 'Lost').length;
     const activeTasks = tasks.filter(t => t.status !== 'Done').length;
-    const conversion = total > 0 ? ((won / total) * 100).toFixed(1) : 0;
 
     document.getElementById('mainKpis').innerHTML = `
-      <div class="kpi-card">
+      <div class="kpi-card kpi-compact">
         <div class="kpi-label">💼 Total Leads</div>
         <div class="kpi-value">${total}</div>
-        <div style="font-size: 12px; color: var(--text-soft); margin-top: 8px;">All opportunities</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">🔥 Hot Leads</div>
-        <div class="kpi-value">${hot}</div>
-        <div style="font-size: 12px; color: var(--text-soft); margin-top: 8px;">High priority</div>
-      </div>
-      <div class="kpi-card">
+      <div class="kpi-card kpi-compact">
         <div class="kpi-label">🎉 Won Deals</div>
         <div class="kpi-value">${won}</div>
-        <div style="font-size: 12px; color: var(--text-soft); margin-top: 8px;">Closed this period</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">💰 Pipeline Value</div>
+      <div class="kpi-card kpi-compact">
+        <div class="kpi-label">💰 Pipeline</div>
         <div class="kpi-value">₹${(pipeline/100000).toFixed(1)}L</div>
-        <div style="font-size: 12px; color: var(--text-soft); margin-top: 8px;">Total at risk</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">📊 Active Leads</div>
-        <div class="kpi-value">${activeLeads}</div>
-        <div style="font-size: 12px; color: var(--text-soft); margin-top: 8px;">In pipeline</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">📈 Conversion Rate</div>
-        <div class="kpi-value">${conversion}%</div>
-        <div style="font-size: 12px; color: var(--text-soft); margin-top: 8px;">Win rate</div>
-      </div>
-      <div class="kpi-card">
+      <div class="kpi-card kpi-compact">
         <div class="kpi-label">⏰ Active Tasks</div>
         <div class="kpi-value">${activeTasks}</div>
-        <div style="font-size: 12px; color: var(--text-soft); margin-top: 8px;">Pending actions</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">👥 Team Members</div>
-        <div class="kpi-value">${users.length}</div>
-        <div style="font-size: 12px; color: var(--text-soft); margin-top: 8px;">Active users</div>
       </div>
     `;
 
-    // Task Status Breakdown (full task details grouped by status)
+    // Alerts banner (reminders, compact single row)
+    const reminders = tasks.filter(t => t.status !== 'Done' && (isFollowUpDue(t) || (t.dueDate === todayStr())));
+    document.getElementById('alertsBanner').innerHTML = reminders.length === 0 ? '' : `
+      <div class="alerts-row">
+        <div class="alert-chip alert-chip-warning" onclick="showTab('tasks')">🔔 ${reminders.length} reminder${reminders.length !== 1 ? 's' : ''} due</div>
+      </div>
+    `;
+
+    // Task Status chart (chart only, no per-task list — keeps dashboard light)
     const statusOrder = ['To Do', 'In Progress', 'Done'];
-    const statusIcon = { 'To Do': '📋', 'In Progress': '⏳', 'Done': '✓' };
+    const taskStatusColors = { 'To Do': '#1d4ed8', 'In Progress': '#f59e0b', 'Done': '#22c55e' };
     document.getElementById('taskStatusBreakdown').innerHTML = tasks.length === 0
       ? '<div style="text-align: center; color: var(--text-soft); padding: 20px;">No tasks yet</div>'
-      : statusOrder.map(status => {
-          const group = tasks.filter(t => t.status === status);
-          if (group.length === 0) return '';
+      : buildBarChart(statusOrder.map(s => ({ label: s, count: tasks.filter(t => t.status === s).length, color: taskStatusColors[s] })));
+
+    // Lead Pipeline chart (chart only)
+    const stageStats = {};
+    leads.forEach(l => stageStats[l.status] = (stageStats[l.status] || 0) + 1);
+    document.getElementById('leadStageBreakdown').innerHTML = leads.length === 0
+      ? '<div style="text-align: center; color: var(--text-soft); padding: 20px;">No leads yet</div>'
+      : buildBarChart(Object.entries(stageStats).map(([stage, count]) => ({ label: stage, count: count })));
+
+    // Task details — linear single-line rows, most urgent first
+    const urgentTasks = tasks.slice().filter(t => t.status !== 'Done').sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).slice(0, 6);
+    document.getElementById('taskLinearList').innerHTML = urgentTasks.length === 0
+      ? '<div style="text-align: center; color: var(--text-soft); padding: 20px;">✅ No pending tasks</div>'
+      : urgentTasks.map(t => {
+          const user = users.find(u => u.id === t.assignedTo);
+          const overdue = isTaskOverdue(t);
           return `
-            <div style="margin-bottom: 16px;">
-              <div style="font-size: 12px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">${statusIcon[status]} ${status} (${group.length})</div>
-              ${group.map(t => {
-                const user = users.find(u => u.id === t.assignedTo);
-                return `
-                  <div class="stat-item">
-                    <div class="stat-label">
-                      <div style="font-weight: 700;">${t.title}</div>
-                      <div style="font-size: 11px; color: var(--text-soft); margin-top: 2px;">${t.description || 'No description'}</div>
-                    </div>
-                    <div style="text-align: right;">
-                      <div style="font-size: 12px; font-weight: 700; color: var(--text);">${user ? user.name : '—'}</div>
-                      <div style="font-size: 11px; color: var(--text-soft); margin-top: 2px;">📅 ${t.dueDate}</div>
-                    </div>
-                  </div>
-                `;
-              }).join('')}
+            <div class="task-linear-row">
+              <span class="badge ${getStatusBadge(t.status)}" style="flex-shrink: 0;">${t.status}</span>
+              <span class="task-linear-title">${t.title}</span>
+              <span class="task-linear-meta">${user ? user.name : '—'}</span>
+              <span class="task-linear-meta" style="${overdue ? 'color: var(--danger); font-weight: 700;' : ''}">📅 ${t.dueDate}${overdue ? ' (Overdue)' : ''}</span>
             </div>
           `;
         }).join('');
-
-    // Lead Stage Distribution
-    const stageStats = {};
-    leads.forEach(l => stageStats[l.status] = (stageStats[l.status] || 0) + 1);
-    document.getElementById('leadStageBreakdown').innerHTML = `
-      ${Object.entries(stageStats).map(([stage, count]) => {
-        const percent = leads.length > 0 ? (count / leads.length * 100).toFixed(0) : 0;
-        return `
-          <div class="stat-item">
-            <div class="stat-label">${stage}</div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div class="stat-value">${count}</div>
-              <div style="width: 100px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;">
-                <div style="width: ${percent}%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary));"></div>
-              </div>
-              <span style="font-size: 11px; color: var(--text-soft); min-width: 30px;">${percent}%</span>
-            </div>
-          </div>
-        `;
-      }).join('')}
-    `;
-
-    // Lead Score Analysis
-    const scoreStats = { 'Hot': 0, 'Warm': 0, 'Cold': 0 };
-    leads.forEach(l => scoreStats[l.score]++);
-    const scoreValue = leads.reduce((sum, l) => sum + (l.score === 'Hot' ? 100 : l.score === 'Warm' ? 60 : 20), 0) / Math.max(leads.length, 1);
-    document.getElementById('leadScoreBreakdown').innerHTML = `
-      <div class="stat-item">
-        <div class="stat-label">⭐ Average Lead Score</div>
-        <div class="stat-value">${scoreValue.toFixed(0)}</div>
-      </div>
-      ${Object.entries(scoreStats).map(([score, count]) => {
-        return `
-          <div class="stat-item">
-            <div class="stat-label">${score === 'Hot' ? '🔥' : score === 'Warm' ? '🌤️' : '❄️'} ${score}</div>
-            <div class="stat-value">${count}</div>
-          </div>
-        `;
-      }).join('')}
-    `;
-
-    // Lead Source Breakdown
-    const sourceStats = {};
-    leads.forEach(l => sourceStats[l.source] = (sourceStats[l.source] || 0) + 1);
-    document.getElementById('leadSourceBreakdown').innerHTML = `
-      ${Object.entries(sourceStats).map(([source, count]) => {
-        const percent = leads.length > 0 ? (count / leads.length * 100).toFixed(0) : 0;
-        return `
-          <div class="stat-item">
-            <div class="stat-label">${source || 'Unknown'}</div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div class="stat-value">${count}</div>
-              <span style="font-size: 11px; color: var(--text-soft);">${percent}%</span>
-            </div>
-          </div>
-        `;
-      }).join('')}
-    `;
-
-    // Upcoming Tasks
-    const today = new Date();
-    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const upcoming = tasks.filter(t => new Date(t.dueDate) >= today && new Date(t.dueDate) <= nextWeek && t.status !== 'Done').sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-    document.getElementById('upcomingTasks').innerHTML = upcoming.length > 0 ? upcoming.map(t => {
-      const user = users.find(u => u.id === t.assignedTo);
-      return `
-        <div class="stat-item">
-          <div class="stat-label">${t.title}</div>
-          <div style="text-align: right;">
-            <div style="font-size: 11px; color: var(--text-soft); margin-bottom: 4px;">${t.dueDate}</div>
-            <span class="badge ${getStatusBadge(t.status)}">${t.status}</span>
-          </div>
-        </div>
-      `;
-    }).join('') : '<div style="text-align: center; color: var(--text-soft); padding: 20px;">✅ No upcoming tasks</div>';
-
-    // Hot Leads
-    const hotLeads = leads.filter(l => l.score === 'Hot').sort((a, b) => b.value - a.value);
-    document.getElementById('hotLeads').innerHTML = hotLeads.length > 0 ? hotLeads.map(l => {
-      return `
-        <div class="stat-item">
-          <div class="stat-label"><strong>${l.name}</strong><br><span style="font-size: 11px; color: var(--text-soft);">${l.company}</span></div>
-          <div style="text-align: right;">
-            <div style="font-size: 13px; font-weight: 700; color: var(--primary);">₹${l.value.toLocaleString()}</div>
-            <span class="badge ${getStatusBadge(l.status)}">${l.status}</span>
-          </div>
-        </div>
-      `;
-    }).join('') : '<div style="text-align: center; color: var(--text-soft); padding: 20px;">❄️ No hot leads</div>';
-
-    // Team Performance
-    const teamPerf = users.map(u => {
-      const userLeads = leads.filter(l => l.assignedTo === u.id);
-      const userTasks = tasks.filter(t => t.assignedTo === u.id);
-      const userWon = userLeads.filter(l => l.status === 'Won').length;
-      const totalValue = userLeads.reduce((sum, l) => sum + l.value, 0);
-      return { user: u, leads: userLeads.length, tasks: userTasks.length, won: userWon, value: totalValue };
-    });
-    document.getElementById('teamPerformance').innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>👤 Team Member</th>
-            <th>👤 Leads</th>
-            <th>✓ Tasks</th>
-            <th>🎉 Won</th>
-            <th>💰 Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${teamPerf.map(p => `
-            <tr>
-              <td><strong>${p.user.name}</strong></td>
-              <td>${p.leads}</td>
-              <td>${p.tasks}</td>
-              <td>${p.won}</td>
-              <td>₹${(p.value / 100000).toFixed(1)}L</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-
-    // Reminders & Follow-ups (due today or overdue, not yet escalated stage)
-    const reminders = tasks.filter(t => t.status !== 'Done' && (isFollowUpDue(t) || (t.dueDate === todayStr())));
-    document.getElementById('remindersPanel').innerHTML = reminders.length > 0 ? reminders.map(t => {
-      const user = users.find(u => u.id === t.assignedTo);
-      const reason = isFollowUpDue(t) ? `🔔 Follow-up due ${t.followUpDate}` : `📅 Due today`;
-      return `
-        <div class="stat-item">
-          <div class="stat-label"><strong>${t.title}</strong><br><span style="font-size: 11px; color: var(--text-soft);">${user ? user.name : '—'}</span></div>
-          <div style="text-align: right;">
-            <div style="font-size: 11px; color: var(--warning); font-weight: 700;">${reason}</div>
-            <span class="badge ${getStatusBadge(t.status)}">${t.status}</span>
-          </div>
-        </div>
-      `;
-    }).join('') : '<div style="text-align: center; color: var(--text-soft); padding: 20px;">✅ No reminders due</div>';
-
-    // Escalated Tasks (overdue, auto-escalated to escalation matrix user)
-    const escalated = tasks.filter(t => isTaskOverdue(t));
-    document.getElementById('escalationsPanel').innerHTML = escalated.length > 0 ? escalated.map(t => {
-      const user = users.find(u => u.id === t.assignedTo);
-      const target = getEscalationTarget(t);
-      return `
-        <div class="stat-item" style="border-left: 3px solid var(--danger);">
-          <div class="stat-label"><strong>${t.title}</strong><br><span style="font-size: 11px; color: var(--text-soft);">Missed by ${user ? user.name : '—'} • Due ${t.dueDate}</span></div>
-          <div style="text-align: right;">
-            ${target ? `<div style="font-size: 12px; color: var(--danger); font-weight: 700;">🚨 ${target.name}</div>` : '<div style="font-size: 11px; color: var(--text-soft);">No escalation set</div>'}
-          </div>
-        </div>
-      `;
-    }).join('') : '<div style="text-align: center; color: var(--text-soft); padding: 20px;">✅ No escalations</div>';
   }
 
   function renderLeads() {
@@ -3248,6 +3982,10 @@
                 <div style="font-size: 12px;">
                   <div style="color: var(--text-soft); font-weight: 600; margin-bottom: 4px;">💰 Deal Value</div>
                   <div style="color: var(--text); font-weight: 700;">₹${l.value.toLocaleString()}</div>
+                </div>
+                <div style="font-size: 12px;">
+                  <div style="color: var(--text-soft); font-weight: 600; margin-bottom: 4px;">📦 Products</div>
+                  <div style="color: var(--text); font-weight: 700;">${l.products || '—'}</div>
                 </div>
               </div>
               <div style="display: flex; justify-content: flex-end; align-items: center; padding-top: 12px; border-top: 1px solid var(--border);">
@@ -3405,6 +4143,7 @@
     document.getElementById('quotePhone').value = editingQuotation.phone || '';
     document.getElementById('quoteValue').value = editingQuotation.value;
     document.getElementById('quoteValidTill').value = editingQuotation.validTill;
+    document.getElementById('quoteProducts').value = editingQuotation.products || '';
     document.getElementById('quoteStatus').value = editingQuotation.status;
     document.getElementById('quoteNotes').value = editingQuotation.notes || '';
     document.getElementById('quotationModal').classList.add('active');
@@ -3422,6 +4161,7 @@
     editingQuotation.phone = document.getElementById('quotePhone').value;
     editingQuotation.value = parseInt(document.getElementById('quoteValue').value);
     editingQuotation.validTill = document.getElementById('quoteValidTill').value;
+    editingQuotation.products = document.getElementById('quoteProducts').value;
     editingQuotation.status = document.getElementById('quoteStatus').value;
     editingQuotation.notes = document.getElementById('quoteNotes').value;
     const idx = quotations.findIndex(q => q.id === editingQuotation.id);
@@ -3490,7 +4230,7 @@
           <div class="lead-card">
             <div class="lead-header">
               <div>
-                <div class="lead-name">${q.quoteNo}${q.revision > 1 ? ` <span style="font-size: 11px; color: var(--text-soft); font-weight: 600;">(Revision ${q.revision})</span>` : ''}</div>
+                <div class="lead-name">${q.quoteNo} <span style="font-size: 11px; color: var(--text-soft); font-weight: 600;">(R${String(q.revision).padStart(2, '0')})</span></div>
                 <div style="font-size: 13px; color: var(--text-soft);">${q.contactName} • ${q.email || '—'}</div>
               </div>
               <div style="text-align: right;">
@@ -3514,8 +4254,13 @@
                 <div style="color: var(--text-soft); font-weight: 600; margin-bottom: 4px;">📞 Phone</div>
                 <div style="color: var(--text); font-weight: 700;">${q.phone || '—'}</div>
               </div>
+              <div style="font-size: 12px;">
+                <div style="color: var(--text-soft); font-weight: 600; margin-bottom: 4px;">📦 Products</div>
+                <div style="color: var(--text); font-weight: 700;">${q.products || '—'}</div>
+              </div>
             </div>
             <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--border);">
+              <button class="btn-sm btn-sm-edit" onclick="printQuotation(${q.id})">🖨️ Print</button>
               ${isAdmin() ? `
                 <select class="form-select" style="padding: 6px 10px; font-size: 12px; width: auto;" onchange="updateQuotationStatus(${q.id}, this.value)">
                   <option value="Draft" ${q.status === 'Draft' ? 'selected' : ''}>📋 Draft</option>
@@ -3603,6 +4348,229 @@
     }).join('');
   }
 
+  // REPORTS
+  function csvEscape(value) {
+    const str = value === null || value === undefined ? '' : String(value);
+    if (/[",\n]/.test(str)) {
+      return '"' + str.replace(/"/g, '""') + '"';
+    }
+    return str;
+  }
+
+  function downloadCSV(filename, headers, rows) {
+    const lines = [headers.join(',')];
+    rows.forEach(row => {
+      lines.push(headers.map(h => csvEscape(row[h])).join(','));
+    });
+    const csvContent = lines.join('\n');
+    const blob = new Blob(['﻿' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    addAuditLog('Downloaded Report', 'Report', filename);
+  }
+
+  window.downloadLeadReport = function() {
+    const headers = ['Name', 'Company', 'Email', 'Phone', 'Source', 'Industry', 'Status', 'Score', 'Value', 'Products', 'AssignedTo', 'CloseDate', 'CreatedDate'];
+    const rows = leads.map(l => {
+      const user = users.find(u => u.id === l.assignedTo);
+      return {
+        Name: l.name, Company: l.company, Email: l.email, Phone: l.phone || '',
+        Source: l.source || '', Industry: l.industry || '', Status: l.status, Score: l.score,
+        Value: l.value, Products: l.products || '', AssignedTo: user ? user.name : '', CloseDate: l.closeDate || '', CreatedDate: l.date
+      };
+    });
+    downloadCSV('Lead_Generation_Report_' + todayStr() + '.csv', headers, rows);
+  };
+
+  window.downloadQuotationReport = function() {
+    const headers = ['QuoteNo', 'Revision', 'Company', 'Contact', 'Email', 'Phone', 'Value', 'Products', 'Status', 'IssueDate', 'ValidTill'];
+    const rows = quotations.map(q => ({
+      QuoteNo: q.quoteNo, Revision: 'R' + String(q.revision).padStart(2, '0'), Company: q.company,
+      Contact: q.contactName, Email: q.email || '', Phone: q.phone || '', Value: q.value, Products: q.products || '',
+      Status: q.status, IssueDate: q.issueDate, ValidTill: q.validTill
+    }));
+    downloadCSV('Quotation_Report_' + todayStr() + '.csv', headers, rows);
+  };
+
+  window.downloadTaskReport = function() {
+    const headers = ['Title', 'Description', 'Status', 'AssignedTo', 'DueDate', 'FollowUpDate', 'Escalated', 'EscalatedTo'];
+    const rows = tasks.map(t => {
+      const user = users.find(u => u.id === t.assignedTo);
+      const target = getEscalationTarget(t);
+      return {
+        Title: t.title, Description: t.description || '', Status: t.status,
+        AssignedTo: user ? user.name : '', DueDate: t.dueDate, FollowUpDate: t.followUpDate || '',
+        Escalated: t.escalated ? 'Yes' : 'No', EscalatedTo: target ? target.name : ''
+      };
+    });
+    downloadCSV('Task_Report_' + todayStr() + '.csv', headers, rows);
+  };
+
+  window.downloadAuditReport = function() {
+    const headers = ['Action', 'User', 'Entity', 'EntityName', 'Timestamp'];
+    const rows = auditLogs.map(log => ({
+      Action: log.action, User: log.user, Entity: log.entity, EntityName: log.entityName,
+      Timestamp: new Date(log.timestamp).toLocaleString('en-IN')
+    }));
+    downloadCSV('Activity_Report_' + todayStr() + '.csv', headers, rows);
+  };
+
+  window.downloadUserReport = function() {
+    const headers = ['Name', 'Email', 'Role', 'Department', 'Designation', 'Status', 'EscalationTo'];
+    const rows = users.map(u => {
+      const escalationUser = u.escalationTo ? users.find(eu => eu.id === u.escalationTo) : null;
+      return {
+        Name: u.name, Email: u.email, Role: u.role, Department: u.department || '',
+        Designation: u.designation || '', Status: u.active ? 'Active' : 'Inactive',
+        EscalationTo: escalationUser ? escalationUser.name : ''
+      };
+    });
+    downloadCSV('User_Report_' + todayStr() + '.csv', headers, rows);
+  };
+
+  function renderReports() {
+    document.getElementById('reportLeadsCount').textContent = leads.length;
+    document.getElementById('reportQuotationsCount').textContent = quotations.length;
+    document.getElementById('reportTasksCount').textContent = tasks.length;
+    document.getElementById('reportAuditCount').textContent = auditLogs.length;
+    document.getElementById('reportUsersCount').textContent = users.length;
+  }
+
+  // DATA ANALYSIS (client-side Excel/CSV parsing via SheetJS)
+  window.handleExcelUpload = function(e) {
+    const file = e.target.files[0];
+    const statusEl = document.getElementById('excelUploadStatus');
+    const resultsEl = document.getElementById('excelAnalysisResults');
+    if (!file) return;
+
+    if (typeof XLSX === 'undefined') {
+      statusEl.innerHTML = '<div class="error-msg show">❌ Excel parsing library failed to load. Check your internet connection and try again.</div>';
+      return;
+    }
+
+    statusEl.innerHTML = '<div style="font-size: 12px; color: var(--text-soft); margin-top: 10px;">⏳ Parsing file...</div>';
+    resultsEl.innerHTML = '';
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      try {
+        const data = new Uint8Array(evt.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+        if (rows.length === 0) {
+          statusEl.innerHTML = '<div class="error-msg show">❌ No data found in this file</div>';
+          return;
+        }
+
+        statusEl.innerHTML = `<div style="font-size: 12px; color: var(--success); font-weight: 700; margin-top: 10px;">✓ Loaded "${file.name}" — sheet "${sheetName}" — ${rows.length} rows</div>`;
+        addAuditLog('Analyzed Excel File', 'Data Analysis', `${file.name} (${rows.length} rows)`);
+        renderExcelAnalysis(rows, file.name);
+      } catch (err) {
+        statusEl.innerHTML = `<div class="error-msg show">❌ Could not parse file: ${err.message}</div>`;
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  function analyzeColumn(rows, key) {
+    const values = rows.map(r => r[key]).filter(v => v !== '' && v !== null && v !== undefined);
+    const numericValues = values.filter(v => typeof v === 'number' || (typeof v === 'string' && v.trim() !== '' && !isNaN(parseFloat(v))));
+    const isNumeric = values.length > 0 && (numericValues.length / values.length) >= 0.7;
+
+    if (isNumeric) {
+      const nums = numericValues.map(v => typeof v === 'number' ? v : parseFloat(v));
+      const sum = nums.reduce((a, b) => a + b, 0);
+      const avg = sum / nums.length;
+      const min = Math.min(...nums);
+      const max = Math.max(...nums);
+      return { type: 'numeric', count: values.length, missing: rows.length - values.length, sum, avg, min, max };
+    } else {
+      const freq = {};
+      values.forEach(v => { const key2 = String(v); freq[key2] = (freq[key2] || 0) + 1; });
+      const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+      return { type: 'categorical', count: values.length, missing: rows.length - values.length, distinct: sorted.length, top: sorted.slice(0, 6) };
+    }
+  }
+
+  function renderExcelAnalysis(rows, fileName) {
+    const columns = Object.keys(rows[0]);
+    const resultsEl = document.getElementById('excelAnalysisResults');
+
+    let html = `
+      <div class="stats-grid">
+        <div class="kpi-card kpi-compact">
+          <div class="kpi-label">📄 File</div>
+          <div class="kpi-value" style="font-size: 14px;">${fileName.length > 18 ? fileName.slice(0, 16) + '…' : fileName}</div>
+        </div>
+        <div class="kpi-card kpi-compact">
+          <div class="kpi-label">📊 Rows</div>
+          <div class="kpi-value">${rows.length}</div>
+        </div>
+        <div class="kpi-card kpi-compact">
+          <div class="kpi-label">📋 Columns</div>
+          <div class="kpi-value">${columns.length}</div>
+        </div>
+      </div>
+    `;
+
+    columns.forEach(col => {
+      const analysis = analyzeColumn(rows, col);
+      if (analysis.type === 'numeric') {
+        html += `
+          <div class="column-analysis-card">
+            <div class="column-analysis-header">
+              <span class="column-name">${col}</span>
+              <span class="column-type-badge">Numeric</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 14px;">
+              <div class="stat-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <div style="font-size: 11px; color: var(--text-soft);">Sum</div>
+                <div class="stat-value" style="font-size: 16px;">${analysis.sum.toLocaleString(undefined, { maximumFractionDigits: 2 })}</div>
+              </div>
+              <div class="stat-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <div style="font-size: 11px; color: var(--text-soft);">Average</div>
+                <div class="stat-value" style="font-size: 16px;">${analysis.avg.toLocaleString(undefined, { maximumFractionDigits: 2 })}</div>
+              </div>
+              <div class="stat-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <div style="font-size: 11px; color: var(--text-soft);">Min</div>
+                <div class="stat-value" style="font-size: 16px;">${analysis.min.toLocaleString()}</div>
+              </div>
+              <div class="stat-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <div style="font-size: 11px; color: var(--text-soft);">Max</div>
+                <div class="stat-value" style="font-size: 16px;">${analysis.max.toLocaleString()}</div>
+              </div>
+              <div class="stat-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                <div style="font-size: 11px; color: var(--text-soft);">Filled / Missing</div>
+                <div class="stat-value" style="font-size: 16px;">${analysis.count} / ${analysis.missing}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="column-analysis-card">
+            <div class="column-analysis-header">
+              <span class="column-name">${col}</span>
+              <span class="column-type-badge">Categorical • ${analysis.distinct} distinct</span>
+            </div>
+            ${buildBarChart(analysis.top.map(([label, count]) => ({ label: String(label), count: count })))}
+          </div>
+        `;
+      }
+    });
+
+    resultsEl.innerHTML = html;
+  }
+
   // SETTINGS
   function renderSettings() {
     if (!currentUser) return;
@@ -3622,7 +4590,68 @@
     document.getElementById('currentPassword').value = '';
     document.getElementById('newPassword').value = '';
     document.getElementById('confirmPassword').value = '';
+
+    const smtpTabBtn = document.getElementById('settingsTabBtn_smtp');
+    if (smtpTabBtn) smtpTabBtn.style.display = isAdmin ? '' : 'none';
+    const companyTabBtn = document.getElementById('settingsTabBtn_company');
+    if (companyTabBtn) companyTabBtn.style.display = isAdmin ? '' : 'none';
+    if (isAdmin) {
+      const smtp = getSmtpSettings();
+      document.getElementById('smtpHost').value = smtp.host || '';
+      document.getElementById('smtpPort').value = smtp.port || '';
+      document.getElementById('smtpUsername').value = smtp.username || '';
+      document.getElementById('smtpPassword').value = smtp.password || '';
+      document.getElementById('smtpFromEmail').value = smtp.fromEmail || '';
+      document.getElementById('smtpFromName').value = smtp.fromName || '';
+      document.getElementById('smtpEncryption').value = smtp.encryption || 'TLS';
+      document.getElementById('smtpSaveSuccess').classList.remove('show');
+
+      const company = getCompanySettings();
+      document.getElementById('companyName').value = company.name || '';
+      document.getElementById('companyTagline').value = company.tagline || '';
+      document.getElementById('companyAddress').value = company.address || '';
+      document.getElementById('companyPhone').value = company.phone || '';
+      document.getElementById('companyEmail').value = company.email || '';
+      document.getElementById('companyWebsite').value = company.website || '';
+      document.getElementById('companyGstin').value = company.gstin || '';
+      document.getElementById('companyBank').value = company.bank || '';
+      document.getElementById('companyIfsc').value = company.ifsc || '';
+      document.getElementById('companySignatory').value = company.signatory || '';
+      document.getElementById('companyLogoPreview').innerHTML = company.logo
+        ? `<img src="${company.logo}" style="width:100%;height:100%;object-fit:cover;">`
+        : `<img src="Gokul_logo.jpg" alt="Logo" style="width:100%;height:100%;object-fit:cover;">`;
+      document.getElementById('companySaveSuccess').classList.remove('show');
+    }
+
+    showSettingsTab('profile');
   }
+
+  window.showSettingsTab = function(tab) {
+    document.querySelectorAll('.settings-tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.settings-tab').forEach(b => b.classList.remove('active'));
+    const content = document.getElementById('settingsTab_' + tab);
+    const btn = document.getElementById('settingsTabBtn_' + tab);
+    if (content) content.classList.add('active');
+    if (btn) btn.classList.add('active');
+  };
+
+  window.saveSmtpSettings = function(e) {
+    e.preventDefault();
+    const settings = {
+      host: document.getElementById('smtpHost').value,
+      port: document.getElementById('smtpPort').value,
+      username: document.getElementById('smtpUsername').value,
+      password: document.getElementById('smtpPassword').value,
+      fromEmail: document.getElementById('smtpFromEmail').value,
+      fromName: document.getElementById('smtpFromName').value,
+      encryption: document.getElementById('smtpEncryption').value
+    };
+    localStorage.setItem('gokul_smtp_settings', JSON.stringify(settings));
+    addAuditLog('Updated SMTP Settings', 'Settings', settings.host || 'SMTP');
+    const successEl = document.getElementById('smtpSaveSuccess');
+    successEl.textContent = '✓ SMTP settings saved';
+    successEl.classList.add('show');
+  };
 
   function renderAvatarGrid() {
     const selectedId = (currentUser.profilePic || '').startsWith('avatar:') ? currentUser.profilePic.replace('avatar:', '') : null;
@@ -3726,6 +4755,7 @@
     renderTasks();
     renderUsers();
     renderAudit();
+    renderReports();
   }
 
   loadFromStorage();
