@@ -214,6 +214,33 @@
       transform: translateY(-2px);
     }
 
+    .form-input:disabled, .form-select:disabled, .form-textarea:disabled {
+      color: var(--text-soft) !important;
+      -webkit-text-fill-color: var(--text-soft);
+      opacity: 1;
+      cursor: not-allowed;
+    }
+
+    .form-input::placeholder, .form-textarea::placeholder {
+      color: var(--text-soft);
+      opacity: 0.7;
+    }
+
+    .form-select option {
+      color: #111827;
+      background: #ffffff;
+    }
+
+    .form-input:-webkit-autofill {
+      -webkit-text-fill-color: var(--text);
+      -webkit-box-shadow: 0 0 0 1000px var(--gray-100) inset;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
+    html.dark input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+
     .login-btn {
       width: 100%;
       padding: 14px;
@@ -294,17 +321,145 @@
 
     .sidebar {
       width: 280px;
+      min-width: 280px;
       background: var(--white);
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       box-shadow: 2px 0 8px rgba(0,0,0,0.04);
-      transition: all 0.3s ease;
+      transition: width 0.25s ease, min-width 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sidebar.sidebar-hidden {
+      width: 80px;
+      min-width: 80px;
+    }
+
+    .sidebar-toggle-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--gray-100);
+      color: var(--text-soft);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .sidebar.sidebar-hidden .sidebar-toggle-btn {
+      position: static;
+      margin: 0 auto 10px;
+    }
+
+    .sidebar-toggle-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+
+    /* Collapsed mini-sidebar: hide all text labels */
+    .sidebar.sidebar-hidden .sidebar-label,
+    .sidebar.sidebar-hidden .user-name,
+    .sidebar.sidebar-hidden .user-email,
+    .sidebar.sidebar-hidden .ai-search-hint {
+      display: none;
+    }
+
+    .sidebar.sidebar-hidden .sidebar-header {
+      padding: 16px 8px;
+    }
+
+    .sidebar.sidebar-hidden .logo {
+      margin-bottom: 10px;
+    }
+
+    .sidebar.sidebar-hidden .logo-icon img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .sidebar.sidebar-hidden .ai-search-trigger {
+      padding: 8px;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .sidebar.sidebar-hidden .ai-globe-ball {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+    }
+
+    .sidebar.sidebar-hidden .ai-globe-spin {
+      font-size: 16px;
+    }
+
+    .sidebar.sidebar-hidden .nav-menu {
+      padding: 12px 8px;
+    }
+
+    .sidebar.sidebar-hidden .nav-item {
+      justify-content: center;
+      padding: 12px 0;
+      gap: 0;
+    }
+
+    .sidebar.sidebar-hidden .nav-item span:first-child {
+      font-size: 18px;
+    }
+
+    .sidebar.sidebar-hidden .sidebar-footer {
+      padding: 16px 8px;
+    }
+
+    .sidebar.sidebar-hidden .theme-toggle {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      margin: 0 auto 14px;
+      gap: 0;
+    }
+
+    .sidebar.sidebar-hidden .user-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 4px;
+    }
+
+    .sidebar.sidebar-hidden .password-quick-btn {
+      position: static;
+      margin-bottom: 8px;
+    }
+
+    .sidebar.sidebar-hidden .logout-btn {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      margin: 0 auto;
+      gap: 0;
     }
 
     .sidebar-header {
       padding: 28px 24px;
       border-bottom: 1px solid var(--border);
+      position: relative;
       background: linear-gradient(135deg, rgba(29, 78, 216, 0.05) 0%, rgba(13, 148, 136, 0.05) 100%);
     }
 
@@ -580,6 +735,10 @@
       font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .logout-btn:hover {
@@ -650,6 +809,8 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
       transition: all 0.3s ease;
       box-shadow: 0 8px 16px rgba(29, 78, 216, 0.3);
     }
@@ -1391,58 +1552,66 @@
 
 <!-- APP -->
 <div class="app-wrapper hidden" id="appPage">
-  <div class="sidebar">
+  <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Collapse sidebar">‹</button>
       <div class="logo">
         <span class="logo-icon"><img src="Gokul_logo.jpg" alt="Gokul"></span>
-        <span>Gokul</span>
+        <span class="sidebar-label">Gokul</span>
       </div>
       <div class="ai-search-trigger" onclick="openAISearch()">
         <span class="ai-globe-ball"><span class="ai-globe-spin">🌐</span></span>
-        <span class="ai-search-text">AI Search</span>
-        <span class="ai-search-hint">Ctrl+K</span>
+        <span class="ai-search-text sidebar-label">AI Search</span>
+        <span class="ai-search-hint sidebar-label">Ctrl+K</span>
       </div>
     </div>
-    
+
     <div class="nav-menu">
-      <button class="nav-item active" onclick="showTab('dashboard')">
+      <button class="nav-item active" onclick="showTab('dashboard')" title="Dashboard">
         <span>📊</span>
-        <span>Dashboard</span>
+        <span class="sidebar-label">Dashboard</span>
       </button>
-      <button class="nav-item" onclick="showTab('leads')">
+      <button class="nav-item" onclick="showTab('leads')" title="Leads">
         <span>👤</span>
-        <span>Leads</span>
+        <span class="sidebar-label">Leads</span>
       </button>
-      <button class="nav-item" onclick="showTab('tasks')">
+      <button class="nav-item" onclick="showTab('quotations')" title="Quotations">
+        <span>💰</span>
+        <span class="sidebar-label">Quotations</span>
+      </button>
+      <button class="nav-item" onclick="showTab('tasks')" title="Tasks">
         <span>✓</span>
-        <span>Tasks</span>
+        <span class="sidebar-label">Tasks</span>
       </button>
-      <button class="nav-item" id="navUsers" onclick="showTab('users')">
+      <button class="nav-item" id="navUsers" onclick="showTab('users')" title="Users">
         <span>👥</span>
-        <span>Users</span>
+        <span class="sidebar-label">Users</span>
       </button>
-      <button class="nav-item" onclick="showTab('audit')">
+      <button class="nav-item" onclick="showTab('audit')" title="Activity">
         <span>📝</span>
-        <span>Activity</span>
+        <span class="sidebar-label">Activity</span>
       </button>
-      <button class="nav-item" onclick="showTab('settings')">
+      <button class="nav-item" onclick="showTab('settings')" title="Settings">
         <span>⚙️</span>
-        <span>Settings</span>
+        <span class="sidebar-label">Settings</span>
       </button>
     </div>
 
     <div class="sidebar-footer">
-      <button class="theme-toggle" onclick="toggleTheme()">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
         <span id="themeIcon">🌙</span>
-        <span id="themeText">Dark Mode</span>
+        <span id="themeText" class="sidebar-label">Dark Mode</span>
       </button>
       <div class="user-panel">
-        <button class="password-quick-btn" onclick="openPasswordChange()" title="Change Password">🔑</button>
+        <button class="password-quick-btn sidebar-label" onclick="openPasswordChange()" title="Change Password">🔑</button>
         <div class="user-avatar" id="userAvatarSmall">R</div>
-        <div class="user-name" id="displayName">User</div>
-        <div class="user-email" id="displayEmail">email@company.com</div>
+        <div class="user-name sidebar-label" id="displayName">User</div>
+        <div class="user-email sidebar-label" id="displayEmail">email@company.com</div>
       </div>
-      <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+      <button class="logout-btn" onclick="handleLogout()" title="Logout">
+        <span>🚪</span>
+        <span class="sidebar-label">Logout</span>
+      </button>
     </div>
   </div>
 
@@ -1486,6 +1655,19 @@
           </div>
         </div>
 
+        <!-- Reminders and Escalations -->
+        <div class="dashboard-grid">
+          <div class="data-card">
+            <div class="card-header">🔔 Reminders & Follow-ups</div>
+            <div class="card-content" id="remindersPanel"></div>
+          </div>
+
+          <div class="data-card">
+            <div class="card-header">🚨 Escalated Tasks</div>
+            <div class="card-content" id="escalationsPanel"></div>
+          </div>
+        </div>
+
         <!-- Upcoming and Recent -->
         <div class="dashboard-grid">
           <div class="data-card">
@@ -1525,6 +1707,19 @@
         <div id="leadsContainer"></div>
       </div>
 
+      <!-- QUOTATIONS -->
+      <div class="view" id="quotations">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Quotations</h1>
+            <div class="page-desc">Auto-generated when a lead is marked Won — grouped by lead with full revision history</div>
+          </div>
+          <input type="text" class="search-bar" id="quotationSearch" placeholder="🔍 Search quotations..." onkeyup="filterQuotations()">
+        </div>
+        <div class="stats-grid" id="quotationsKpis"></div>
+        <div id="quotationsContainer"></div>
+      </div>
+
       <!-- TASKS -->
       <div class="view" id="tasks">
         <div class="page-header">
@@ -1532,10 +1727,13 @@
             <h1>Tasks</h1>
             <div class="page-desc">Team activities and deadlines</div>
           </div>
-          <button class="btn-primary" onclick="openTaskModal()">
-            <span>➕</span>
-            <span>Add Task</span>
-          </button>
+          <div style="display: flex; gap: 12px;">
+            <input type="text" class="search-bar" id="taskSearch" placeholder="🔍 Search tasks..." onkeyup="filterTasks()">
+            <button class="btn-primary" onclick="openTaskModal()">
+              <span>➕</span>
+              <span>Add Task</span>
+            </button>
+          </div>
         </div>
         <div class="stats-grid" id="tasksKpis"></div>
         <div class="data-card">
@@ -1545,7 +1743,8 @@
                 <th>✓ Task</th>
                 <th>Status</th>
                 <th>Assigned</th>
-                <th>Due</th>
+                <th>Due / Follow-up</th>
+                <th>🚨 Escalation</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -1561,10 +1760,13 @@
             <h1>Team Members</h1>
             <div class="page-desc">Manage team and permissions</div>
           </div>
-          <button class="btn-primary" id="addUserBtn" onclick="openUserModal()">
-            <span>➕</span>
-            <span>Add User</span>
-          </button>
+          <div style="display: flex; gap: 12px;">
+            <input type="text" class="search-bar" id="userSearch" placeholder="🔍 Search users..." onkeyup="filterUsers()">
+            <button class="btn-primary" id="addUserBtn" onclick="openUserModal()">
+              <span>➕</span>
+              <span>Add User</span>
+            </button>
+          </div>
         </div>
         <div class="stats-grid" id="usersKpis"></div>
         <div class="data-card">
@@ -1576,6 +1778,7 @@
                 <th>Role</th>
                 <th>Department</th>
                 <th>Designation</th>
+                <th>🚨 Escalates To</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -1592,6 +1795,7 @@
             <h1>Activity Log</h1>
             <div class="page-desc">Track all CRM activities</div>
           </div>
+          <input type="text" class="search-bar" id="auditSearch" placeholder="🔍 Search activity..." onkeyup="filterAudit()">
         </div>
         <div id="auditContainer"></div>
       </div>
@@ -1738,7 +1942,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-cancel" onclick="closeLeadModal()">Cancel</button>
-        <button type="submit" class="btn-success">✓ Save Lead(s)</button>
+        <button type="submit" class="btn-success">✓ Save Lead</button>
       </div>
     </form>
   </div>
@@ -1775,14 +1979,81 @@
             <select id="taskAssigned" class="form-select" required></select>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">📅 Due Date</label>
-          <input type="date" id="taskDue" class="form-input" required>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">📅 Due Date</label>
+            <input type="date" id="taskDue" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">🔔 Next Follow-up Date</label>
+            <input type="date" id="taskFollowUp" class="form-input">
+          </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-cancel" onclick="closeTaskModal()">Cancel</button>
         <button type="submit" class="btn-success">✓ Save Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Quotation Modal -->
+<div class="modal" id="quotationModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="quotationModalTitle">📄 Edit Quotation</h3>
+      <button class="modal-close" onclick="closeQuotationModal()">×</button>
+    </div>
+    <form onsubmit="saveQuotationEdit(event)">
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">🏢 Company</label>
+            <input type="text" id="quoteCompany" class="form-input" disabled>
+          </div>
+          <div class="form-group">
+            <label class="form-label">👤 Contact Name</label>
+            <input type="text" id="quoteContactName" class="form-input" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">📧 Email</label>
+            <input type="email" id="quoteEmail" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">📞 Phone</label>
+            <input type="tel" id="quotePhone" class="form-input">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">💰 Quote Value (₹)</label>
+            <input type="number" id="quoteValue" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">📅 Valid Till</label>
+            <input type="date" id="quoteValidTill" class="form-input" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">📊 Status</label>
+          <select id="quoteStatus" class="form-select" required>
+            <option value="Draft">📋 Draft</option>
+            <option value="Sent">📤 Sent</option>
+            <option value="Accepted">✓ Accepted</option>
+            <option value="Rejected">❌ Rejected</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">📝 Notes</label>
+          <textarea id="quoteNotes" class="form-textarea" style="min-height: 80px;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeQuotationModal()">Cancel</button>
+        <button type="submit" class="btn-success">✓ Save Quotation</button>
       </div>
     </form>
   </div>
@@ -1847,6 +2118,15 @@
             <input type="text" id="userDesignation" class="form-input" placeholder="Sales Manager, Sales Rep, etc">
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">🚨 Escalation User</label>
+            <select id="userEscalation" class="form-select">
+              <option value="">None</option>
+            </select>
+            <div style="font-size: 11px; color: var(--text-soft); margin-top: 6px;">If this user misses a task deadline, it auto-escalates to this person</div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-cancel" onclick="closeUserModal()">Cancel</button>
@@ -1863,6 +2143,7 @@
   let users = [];
   let tasks = [];
   let auditLogs = [];
+  let quotations = [];
   let editingLead = null;
   let editingTask = null;
   let editingUser = null;
@@ -1899,12 +2180,33 @@
     }
   }
 
+  // SIDEBAR TOGGLE
+  window.toggleSidebar = function() {
+    const sidebar = document.getElementById('sidebar');
+    const btn = document.getElementById('sidebarToggleBtn');
+    const hidden = sidebar.classList.toggle('sidebar-hidden');
+    btn.title = hidden ? 'Expand sidebar' : 'Collapse sidebar';
+    btn.textContent = hidden ? '›' : '‹';
+    localStorage.setItem('gokul_sidebar_hidden', hidden ? 'true' : 'false');
+  };
+
+  function initSidebarState() {
+    if (localStorage.getItem('gokul_sidebar_hidden') === 'true') {
+      const sidebar = document.getElementById('sidebar');
+      const btn = document.getElementById('sidebarToggleBtn');
+      sidebar.classList.add('sidebar-hidden');
+      btn.title = 'Expand sidebar';
+      btn.textContent = '›';
+    }
+  }
+
   // STORAGE
   function saveToStorage() {
     localStorage.setItem('gokul_leads', JSON.stringify(leads));
     localStorage.setItem('gokul_users', JSON.stringify(users));
     localStorage.setItem('gokul_tasks', JSON.stringify(tasks));
     localStorage.setItem('gokul_audit', JSON.stringify(auditLogs));
+    localStorage.setItem('gokul_quotations', JSON.stringify(quotations));
   }
 
   function loadFromStorage() {
@@ -1912,6 +2214,7 @@
     users = JSON.parse(localStorage.getItem('gokul_users')) || [];
     tasks = JSON.parse(localStorage.getItem('gokul_tasks')) || [];
     auditLogs = JSON.parse(localStorage.getItem('gokul_audit')) || [];
+    quotations = JSON.parse(localStorage.getItem('gokul_quotations')) || [];
   }
 
   function initData() {
@@ -1926,9 +2229,9 @@
     }
     if (users.length === 0) {
       users = [
-        { id: 1, name: 'Rahul Sharma', email: 'test@test.com', role: 'Admin', active: true, password: 'pass@123', department: 'Sales', designation: 'CRM Administrator', profilePic: '' },
-        { id: 2, name: 'Priya Nair', email: 'rahul@yourcompany.com', role: 'Standard', active: true, password: 'pass@123', department: 'Sales', designation: 'Sales Manager', profilePic: '' },
-        { id: 3, name: 'Arjun Singh', email: 'simran@yourcompany.com', role: 'Standard', active: true, password: 'pass@123', department: 'Sales', designation: 'Sales Representative', profilePic: '' }
+        { id: 1, name: 'Rahul Sharma', email: 'test@test.com', role: 'Admin', active: true, password: 'pass@123', department: 'Sales', designation: 'CRM Administrator', profilePic: '', escalationTo: null },
+        { id: 2, name: 'Priya Nair', email: 'rahul@yourcompany.com', role: 'Standard', active: true, password: 'pass@123', department: 'Sales', designation: 'Sales Manager', profilePic: '', escalationTo: 1 },
+        { id: 3, name: 'Arjun Singh', email: 'simran@yourcompany.com', role: 'Standard', active: true, password: 'pass@123', department: 'Sales', designation: 'Sales Representative', profilePic: '', escalationTo: 2 }
       ];
       saveToStorage();
     }
@@ -2182,6 +2485,10 @@
       const appVisible = !document.getElementById('appPage').classList.contains('hidden');
       if (appVisible) openAISearch();
     }
+    if (e.key === 'Escape') {
+      const openModal = document.querySelector('.modal.active');
+      if (openModal) openModal.classList.remove('active');
+    }
   });
 
   // LEAD FUNCTIONS
@@ -2309,6 +2616,9 @@
       const idx = leads.findIndex(l => l.id === editingLead.id);
       leads[idx] = lead;
       addAuditLog('Updated Lead', 'Lead', lead.name);
+      if (lead.status === 'Won' && editingLead.status !== 'Won') {
+        convertLeadToQuotation(lead);
+      }
     } else {
       const rows = document.querySelectorAll('#leadRowsContainer .lead-row-box');
       rows.forEach(row => {
@@ -2332,12 +2642,55 @@
         };
         leads.push(lead);
         addAuditLog('Created Lead', 'Lead', lead.name);
+        if (lead.status === 'Won') {
+          convertLeadToQuotation(lead);
+        }
       });
     }
     saveToStorage();
     closeLeadModal();
     renderLeads();
     renderDashboard();
+    renderQuotations();
+  };
+
+  function convertLeadToQuotation(lead) {
+    const existingForLead = quotations.filter(q => q.leadId === lead.id);
+    const revision = existingForLead.length + 1;
+    const baseSeq = quotations.length + 1;
+    const quoteNo = 'QTN-' + new Date().getFullYear() + '-' + String(baseSeq).padStart(4, '0') + (revision > 1 ? '-R' + revision : '');
+    const issueDate = new Date().toISOString().split('T')[0];
+    const validTill = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const quotation = {
+      id: Date.now() + Math.floor(Math.random() * 1000),
+      quoteNo: quoteNo,
+      leadId: lead.id,
+      revision: revision,
+      company: lead.company,
+      website: lead.website || '',
+      industry: lead.industry || '',
+      contactName: lead.name,
+      email: lead.email,
+      phone: lead.phone,
+      value: lead.value,
+      assignedTo: lead.assignedTo,
+      status: 'Draft',
+      issueDate: issueDate,
+      validTill: validTill,
+      notes: lead.notes || ''
+    };
+    quotations.push(quotation);
+    addAuditLog(revision > 1 ? 'New Quotation Revision' : 'Lead Converted to Quotation', 'Quotation', `${quoteNo} (${lead.company})`);
+    return quotation;
+  }
+
+  window.generateQuotationRevision = function(leadId) {
+    if (!isAdmin()) { alert('🔒 Only an Admin can generate a new quotation revision'); return; }
+    const lead = leads.find(l => l.id === leadId);
+    if (!lead) return;
+    convertLeadToQuotation(lead);
+    saveToStorage();
+    renderQuotations();
   };
 
   window.editLead = function(id) {
@@ -2389,6 +2742,27 @@
     });
   };
 
+  window.filterTasks = function() {
+    const search = document.getElementById('taskSearch').value.toLowerCase();
+    document.querySelectorAll('#tasksTable tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(search) ? '' : 'none';
+    });
+  };
+
+  window.filterUsers = function() {
+    const search = document.getElementById('userSearch').value.toLowerCase();
+    document.querySelectorAll('#usersTable tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(search) ? '' : 'none';
+    });
+  };
+
+  window.filterAudit = function() {
+    const search = document.getElementById('auditSearch').value.toLowerCase();
+    document.querySelectorAll('#auditContainer > div').forEach(item => {
+      item.style.display = item.textContent.toLowerCase().includes(search) ? '' : 'none';
+    });
+  };
+
   // TASK FUNCTIONS
   window.openTaskModal = function() {
     editingTask = null;
@@ -2397,6 +2771,7 @@
     document.getElementById('taskDescription').value = '';
     document.getElementById('taskStatus').value = 'To Do';
     document.getElementById('taskDue').value = '';
+    document.getElementById('taskFollowUp').value = '';
     document.getElementById('taskModal').classList.add('active');
   };
 
@@ -2412,7 +2787,9 @@
       description: document.getElementById('taskDescription').value,
       status: document.getElementById('taskStatus').value,
       assignedTo: parseInt(document.getElementById('taskAssigned').value),
-      dueDate: document.getElementById('taskDue').value
+      dueDate: document.getElementById('taskDue').value,
+      followUpDate: document.getElementById('taskFollowUp').value,
+      escalated: editingTask ? editingTask.escalated : false
     };
 
     if (editingTask) {
@@ -2438,6 +2815,7 @@
     document.getElementById('taskStatus').value = editingTask.status;
     document.getElementById('taskAssigned').value = editingTask.assignedTo;
     document.getElementById('taskDue').value = editingTask.dueDate;
+    document.getElementById('taskFollowUp').value = editingTask.followUpDate || '';
     document.getElementById('taskModal').classList.add('active');
   };
 
@@ -2454,6 +2832,13 @@
   };
 
   // USER FUNCTIONS
+  function populateEscalationSelect(excludeId) {
+    const select = document.getElementById('userEscalation');
+    if (!select) return;
+    select.innerHTML = '<option value="">None</option>' +
+      users.filter(u => u.id !== excludeId).map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+  }
+
   window.openUserModal = function() {
     if (!isAdmin()) { alert('🔒 Only an Admin can add users'); return; }
     editingUser = null;
@@ -2464,6 +2849,8 @@
     document.getElementById('userStatus').value = 'Active';
     document.getElementById('userDepartment').value = '';
     document.getElementById('userDesignation').value = '';
+    populateEscalationSelect(null);
+    document.getElementById('userEscalation').value = '';
     document.getElementById('userModal').classList.add('active');
   };
 
@@ -2481,6 +2868,7 @@
       active: document.getElementById('userStatus').value === 'Active',
       department: document.getElementById('userDepartment').value,
       designation: document.getElementById('userDesignation').value,
+      escalationTo: document.getElementById('userEscalation').value ? parseInt(document.getElementById('userEscalation').value) : null,
       password: editingUser ? editingUser.password : 'pass@123',
       profilePic: editingUser ? editingUser.profilePic : ''
     };
@@ -2510,6 +2898,8 @@
     document.getElementById('userStatus').value = editingUser.active ? 'Active' : 'Inactive';
     document.getElementById('userDepartment').value = editingUser.department || '';
     document.getElementById('userDesignation').value = editingUser.designation || '';
+    populateEscalationSelect(editingUser.id);
+    document.getElementById('userEscalation').value = editingUser.escalationTo || '';
     document.getElementById('userModal').classList.add('active');
   };
 
@@ -2535,7 +2925,8 @@
       'New': 'badge-new', 'Contacted': 'badge-contacted', 'Qualified': 'badge-qualified',
       'Proposal': 'badge-proposal', 'Negotiation': 'badge-negotiation', 'Won': 'badge-won',
       'Lost': 'badge-lost', 'To Do': 'badge-todo', 'In Progress': 'badge-inprogress',
-      'Done': 'badge-done', 'Active': 'badge-active', 'Inactive': 'badge-inactive'
+      'Done': 'badge-done', 'Active': 'badge-active', 'Inactive': 'badge-inactive',
+      'Draft': 'badge-todo', 'Sent': 'badge-inprogress', 'Accepted': 'badge-won', 'Rejected': 'badge-lost'
     };
     return map[status] || 'badge-new';
   }
@@ -2546,6 +2937,8 @@
   }
 
   function renderDashboard() {
+    checkEscalations();
+
     // Main KPIs
     const total = leads.length;
     const won = leads.filter(l => l.status === 'Won').length;
@@ -2749,6 +3142,37 @@
         </tbody>
       </table>
     `;
+
+    // Reminders & Follow-ups (due today or overdue, not yet escalated stage)
+    const reminders = tasks.filter(t => t.status !== 'Done' && (isFollowUpDue(t) || (t.dueDate === todayStr())));
+    document.getElementById('remindersPanel').innerHTML = reminders.length > 0 ? reminders.map(t => {
+      const user = users.find(u => u.id === t.assignedTo);
+      const reason = isFollowUpDue(t) ? `🔔 Follow-up due ${t.followUpDate}` : `📅 Due today`;
+      return `
+        <div class="stat-item">
+          <div class="stat-label"><strong>${t.title}</strong><br><span style="font-size: 11px; color: var(--text-soft);">${user ? user.name : '—'}</span></div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; color: var(--warning); font-weight: 700;">${reason}</div>
+            <span class="badge ${getStatusBadge(t.status)}">${t.status}</span>
+          </div>
+        </div>
+      `;
+    }).join('') : '<div style="text-align: center; color: var(--text-soft); padding: 20px;">✅ No reminders due</div>';
+
+    // Escalated Tasks (overdue, auto-escalated to escalation matrix user)
+    const escalated = tasks.filter(t => isTaskOverdue(t));
+    document.getElementById('escalationsPanel').innerHTML = escalated.length > 0 ? escalated.map(t => {
+      const user = users.find(u => u.id === t.assignedTo);
+      const target = getEscalationTarget(t);
+      return `
+        <div class="stat-item" style="border-left: 3px solid var(--danger);">
+          <div class="stat-label"><strong>${t.title}</strong><br><span style="font-size: 11px; color: var(--text-soft);">Missed by ${user ? user.name : '—'} • Due ${t.dueDate}</span></div>
+          <div style="text-align: right;">
+            ${target ? `<div style="font-size: 12px; color: var(--danger); font-weight: 700;">🚨 ${target.name}</div>` : '<div style="font-size: 11px; color: var(--text-soft);">No escalation set</div>'}
+          </div>
+        </div>
+      `;
+    }).join('') : '<div style="text-align: center; color: var(--text-soft); padding: 20px;">✅ No escalations</div>';
   }
 
   function renderLeads() {
@@ -2862,10 +3286,48 @@
       }).join('');
   }
 
+  function todayStr() {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  function isTaskOverdue(t) {
+    return !!t.dueDate && t.dueDate < todayStr() && t.status !== 'Done';
+  }
+
+  function isFollowUpDue(t) {
+    return !!t.followUpDate && t.followUpDate <= todayStr() && t.status !== 'Done';
+  }
+
+  function getEscalationTarget(t) {
+    const assignee = users.find(u => u.id === t.assignedTo);
+    if (!assignee || !assignee.escalationTo) return null;
+    return users.find(u => u.id === assignee.escalationTo) || null;
+  }
+
+  function checkEscalations() {
+    let changed = false;
+    tasks.forEach(t => {
+      const overdue = isTaskOverdue(t);
+      if (overdue && !t.escalated) {
+        t.escalated = true;
+        const target = getEscalationTarget(t);
+        addAuditLog('Task Escalated', 'Task', `${t.title}${target ? ' → ' + target.name : ''}`);
+        changed = true;
+      } else if (!overdue && t.escalated) {
+        t.escalated = false;
+        changed = true;
+      }
+    });
+    if (changed) saveToStorage();
+  }
+
   function renderTasks() {
+    checkEscalations();
+
     const todo = tasks.filter(t => t.status === 'To Do').length;
     const inprog = tasks.filter(t => t.status === 'In Progress').length;
     const done = tasks.filter(t => t.status === 'Done').length;
+    const overdueCount = tasks.filter(t => isTaskOverdue(t)).length;
 
     document.getElementById('tasksKpis').innerHTML = `
       <div class="kpi-card">
@@ -2884,16 +3346,30 @@
         <div class="kpi-label">✓ Done</div>
         <div class="kpi-value">${done}</div>
       </div>
+      <div class="kpi-card">
+        <div class="kpi-label">🚨 Overdue & Escalated</div>
+        <div class="kpi-value">${overdueCount}</div>
+      </div>
     `;
 
     document.getElementById('tasksTable').innerHTML = tasks.map(t => {
       const user = users.find(u => u.id === t.assignedTo);
+      const overdue = isTaskOverdue(t);
+      const followUpDue = isFollowUpDue(t);
+      const escalationTarget = overdue ? getEscalationTarget(t) : null;
+
       return `
-        <tr>
+        <tr ${overdue ? 'style="background: rgba(239, 68, 68, 0.06);"' : ''}>
           <td><strong>${t.title}</strong><br><span style="font-size: 11px; color: var(--text-soft);">${t.description || 'No description'}</span></td>
           <td><span class="badge ${getStatusBadge(t.status)}">${t.status}</span></td>
           <td>${user ? user.name : '—'}</td>
-          <td>${t.dueDate}</td>
+          <td>
+            <div>📅 ${t.dueDate}${overdue ? ' <span style="color: var(--danger); font-weight: 700;">(Overdue)</span>' : ''}</div>
+            ${t.followUpDate ? `<div style="font-size: 11px; color: ${followUpDue ? 'var(--danger)' : 'var(--text-soft)'}; margin-top: 2px;">🔔 Follow-up: ${t.followUpDate}${followUpDue ? ' (Due)' : ''}</div>` : ''}
+          </td>
+          <td>
+            ${escalationTarget ? `<span class="badge badge-lost">🚨 ${escalationTarget.name}</span>` : (overdue ? '<span style="font-size: 11px; color: var(--text-soft);">No escalation set</span>' : '—')}
+          </td>
           <td>
             ${isAdmin() ? `
             <div class="action-buttons">
@@ -2905,6 +3381,176 @@
         </tr>
       `;
     }).join('');
+  }
+
+  let editingQuotation = null;
+
+  window.updateQuotationStatus = function(id, status) {
+    const idx = quotations.findIndex(q => q.id === id);
+    if (idx === -1) return;
+    quotations[idx].status = status;
+    saveToStorage();
+    addAuditLog('Updated Quotation', 'Quotation', quotations[idx].quoteNo);
+    renderQuotations();
+  };
+
+  window.openQuotationModal = function(id) {
+    if (!isAdmin()) { alert('🔒 Only an Admin can edit quotations'); return; }
+    editingQuotation = quotations.find(q => q.id === id);
+    if (!editingQuotation) return;
+    document.getElementById('quotationModalTitle').textContent = `✏️ Edit Quotation — ${editingQuotation.quoteNo}`;
+    document.getElementById('quoteCompany').value = editingQuotation.company;
+    document.getElementById('quoteContactName').value = editingQuotation.contactName;
+    document.getElementById('quoteEmail').value = editingQuotation.email || '';
+    document.getElementById('quotePhone').value = editingQuotation.phone || '';
+    document.getElementById('quoteValue').value = editingQuotation.value;
+    document.getElementById('quoteValidTill').value = editingQuotation.validTill;
+    document.getElementById('quoteStatus').value = editingQuotation.status;
+    document.getElementById('quoteNotes').value = editingQuotation.notes || '';
+    document.getElementById('quotationModal').classList.add('active');
+  };
+
+  window.closeQuotationModal = function() {
+    document.getElementById('quotationModal').classList.remove('active');
+  };
+
+  window.saveQuotationEdit = function(e) {
+    e.preventDefault();
+    if (!editingQuotation) return;
+    editingQuotation.contactName = document.getElementById('quoteContactName').value;
+    editingQuotation.email = document.getElementById('quoteEmail').value;
+    editingQuotation.phone = document.getElementById('quotePhone').value;
+    editingQuotation.value = parseInt(document.getElementById('quoteValue').value);
+    editingQuotation.validTill = document.getElementById('quoteValidTill').value;
+    editingQuotation.status = document.getElementById('quoteStatus').value;
+    editingQuotation.notes = document.getElementById('quoteNotes').value;
+    const idx = quotations.findIndex(q => q.id === editingQuotation.id);
+    if (idx !== -1) quotations[idx] = editingQuotation;
+    saveToStorage();
+    addAuditLog('Edited Quotation', 'Quotation', editingQuotation.quoteNo);
+    closeQuotationModal();
+    renderQuotations();
+  };
+
+  window.filterQuotations = function() {
+    const search = document.getElementById('quotationSearch').value.toLowerCase();
+    document.querySelectorAll('#quotationsContainer .company-group').forEach(group => {
+      const matches = group.textContent.toLowerCase().includes(search);
+      group.style.display = matches ? 'block' : 'none';
+      if (search && matches) {
+        const leadsEl = group.querySelector('.company-leads');
+        const toggleEl = group.querySelector('.company-toggle');
+        if (leadsEl) leadsEl.classList.add('open');
+        if (toggleEl) toggleEl.classList.add('open');
+      }
+    });
+  };
+
+  function renderQuotations() {
+    const totalValue = quotations.reduce((sum, q) => sum + (q.value || 0), 0);
+    const accepted = quotations.filter(q => q.status === 'Accepted').length;
+    const pending = quotations.filter(q => q.status === 'Draft' || q.status === 'Sent').length;
+
+    document.getElementById('quotationsKpis').innerHTML = `
+      <div class="kpi-card">
+        <div class="kpi-label">📄 Total Quotations</div>
+        <div class="kpi-value">${quotations.length}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">💰 Total Value</div>
+        <div class="kpi-value">₹${(totalValue/100000).toFixed(1)}L</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">✓ Accepted</div>
+        <div class="kpi-value">${accepted}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">⏳ Pending</div>
+        <div class="kpi-value">${pending}</div>
+      </div>
+    `;
+
+    // Group quotations by lead
+    const groups = {};
+    quotations.forEach(q => {
+      if (!groups[q.leadId]) groups[q.leadId] = [];
+      groups[q.leadId].push(q);
+    });
+    const leadIds = Object.keys(groups);
+
+    document.getElementById('quotationsContainer').innerHTML = leadIds.length === 0
+      ? '<div style="text-align: center; color: var(--text-soft); padding: 40px;">No quotations yet. Mark a lead as "Won" to auto-generate one.</div>'
+      : leadIds.map((leadId, gi) => {
+        const revisions = groups[leadId].sort((a, b) => a.revision - b.revision);
+        const latest = revisions[revisions.length - 1];
+        const totalGroupValue = revisions.reduce((sum, q) => sum + (q.value || 0), 0);
+        const safeKey = 'q' + gi;
+
+        const revisionCards = revisions.slice().reverse().map(q => `
+          <div class="lead-card">
+            <div class="lead-header">
+              <div>
+                <div class="lead-name">${q.quoteNo}${q.revision > 1 ? ` <span style="font-size: 11px; color: var(--text-soft); font-weight: 600;">(Revision ${q.revision})</span>` : ''}</div>
+                <div style="font-size: 13px; color: var(--text-soft);">${q.contactName} • ${q.email || '—'}</div>
+              </div>
+              <div style="text-align: right;">
+                <span class="badge ${getStatusBadge(q.status)}">${q.status}</span>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin: 12px 0;">
+              <div style="font-size: 12px;">
+                <div style="color: var(--text-soft); font-weight: 600; margin-bottom: 4px;">💰 Value</div>
+                <div style="color: var(--text); font-weight: 700;">₹${(q.value || 0).toLocaleString()}</div>
+              </div>
+              <div style="font-size: 12px;">
+                <div style="color: var(--text-soft); font-weight: 600; margin-bottom: 4px;">📅 Issued</div>
+                <div style="color: var(--text); font-weight: 700;">${q.issueDate}</div>
+              </div>
+              <div style="font-size: 12px;">
+                <div style="color: var(--text-soft); font-weight: 600; margin-bottom: 4px;">⏳ Valid Till</div>
+                <div style="color: var(--text); font-weight: 700;">${q.validTill}</div>
+              </div>
+              <div style="font-size: 12px;">
+                <div style="color: var(--text-soft); font-weight: 600; margin-bottom: 4px;">📞 Phone</div>
+                <div style="color: var(--text); font-weight: 700;">${q.phone || '—'}</div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--border);">
+              ${isAdmin() ? `
+                <select class="form-select" style="padding: 6px 10px; font-size: 12px; width: auto;" onchange="updateQuotationStatus(${q.id}, this.value)">
+                  <option value="Draft" ${q.status === 'Draft' ? 'selected' : ''}>📋 Draft</option>
+                  <option value="Sent" ${q.status === 'Sent' ? 'selected' : ''}>📤 Sent</option>
+                  <option value="Accepted" ${q.status === 'Accepted' ? 'selected' : ''}>✓ Accepted</option>
+                  <option value="Rejected" ${q.status === 'Rejected' ? 'selected' : ''}>❌ Rejected</option>
+                </select>
+                <button class="btn-sm btn-sm-edit" onclick="openQuotationModal(${q.id})">✏️ Edit</button>
+              ` : ''}
+            </div>
+          </div>
+        `).join('');
+
+        return `
+          <div class="company-group">
+            <div class="company-header" onclick="toggleCompany('${safeKey}')">
+              <div class="company-header-left">
+                <span class="company-icon">🏢</span>
+                <div>
+                  <div class="company-name">${latest.company}</div>
+                  <div class="company-sub">💰 Total Quoted: ₹${(totalGroupValue/100000).toFixed(1)}L • Latest: ${latest.status}</div>
+                </div>
+              </div>
+              <div class="company-header-right">
+                ${isAdmin() ? `<button class="btn-sm btn-sm-edit" onclick="event.stopPropagation(); generateQuotationRevision(${leadId})">🔄 New Revision</button>` : ''}
+                <span class="company-count">${revisions.length} revision${revisions.length !== 1 ? 's' : ''}</span>
+                <span class="company-toggle" id="companyToggle_${safeKey}">▼</span>
+              </div>
+            </div>
+            <div class="company-leads" id="companyLeads_${safeKey}">
+              ${revisionCards}
+            </div>
+          </div>
+        `;
+      }).join('');
   }
 
   function renderUsers() {
@@ -2921,13 +3567,16 @@
       </div>
     `;
 
-    document.getElementById('usersTable').innerHTML = users.map(u => `
+    document.getElementById('usersTable').innerHTML = users.map(u => {
+      const escalationUser = u.escalationTo ? users.find(eu => eu.id === u.escalationTo) : null;
+      return `
       <tr>
         <td><strong>${u.name}</strong></td>
         <td>${u.email}</td>
         <td>${u.role}</td>
         <td>${u.department || '—'}</td>
         <td>${u.designation || '—'}</td>
+        <td>${escalationUser ? escalationUser.name : '—'}</td>
         <td><span class="badge ${getStatusBadge(u.active ? 'Active' : 'Inactive')}">${u.active ? 'Active' : 'Inactive'}</span></td>
         <td>
           <div class="action-buttons">
@@ -2936,7 +3585,8 @@
           </div>
         </td>
       </tr>
-    `).join('');
+    `;
+    }).join('');
   }
 
   function renderAudit() {
@@ -3072,6 +3722,7 @@
     if (!currentUser) return;
     renderDashboard();
     renderLeads();
+    renderQuotations();
     renderTasks();
     renderUsers();
     renderAudit();
@@ -3080,6 +3731,7 @@
   loadFromStorage();
   initData();
   initTheme();
+  initSidebarState();
 })();
 </script>
 
