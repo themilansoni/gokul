@@ -309,7 +309,7 @@
     }
 
     .logo {
-      font-size: 20px;
+      font-size: 30px;
       font-weight: 800;
       letter-spacing: -0.5px;
       text-transform: uppercase;
@@ -326,13 +326,13 @@
     }
 
     .logo-icon {
-      font-size: 28px;
+      font-size: 36px;
     }
 
     .logo-icon img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
       vertical-align: middle;
     }
 
@@ -515,6 +515,32 @@
       margin-bottom: 14px;
       border: 1px solid var(--border);
       box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      position: relative;
+    }
+
+    .password-quick-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(29, 78, 216, 0.3);
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.12) 0%, rgba(13, 148, 136, 0.12) 100%);
+      color: var(--primary);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .password-quick-btn:hover {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      transform: scale(1.1);
+      box-shadow: 0 4px 10px rgba(29, 78, 216, 0.3);
     }
 
     .user-avatar {
@@ -857,6 +883,55 @@
       padding: 16px;
       margin-bottom: 14px;
       position: relative;
+    }
+
+    .avatar-picker-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .avatar-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .avatar-option {
+      cursor: pointer;
+    }
+
+    .avatar-option-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .avatar-option:hover .avatar-option-circle {
+      transform: translateY(-2px) scale(1.08);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .avatar-option.selected .avatar-option-circle {
+      border-color: var(--text);
+      box-shadow: 0 0 0 2px var(--white), 0 0 0 4px var(--primary);
+    }
+
+    .avatar-option-label {
+      display: none;
+      font-size: 9px;
+      color: var(--text-soft);
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.2;
     }
 
     .lead-row-remove {
@@ -1342,13 +1417,17 @@
         <span>✓</span>
         <span>Tasks</span>
       </button>
-      <button class="nav-item" onclick="showTab('users')">
+      <button class="nav-item" id="navUsers" onclick="showTab('users')">
         <span>👥</span>
         <span>Users</span>
       </button>
       <button class="nav-item" onclick="showTab('audit')">
         <span>📝</span>
         <span>Activity</span>
+      </button>
+      <button class="nav-item" onclick="showTab('settings')">
+        <span>⚙️</span>
+        <span>Settings</span>
       </button>
     </div>
 
@@ -1358,6 +1437,7 @@
         <span id="themeText">Dark Mode</span>
       </button>
       <div class="user-panel">
+        <button class="password-quick-btn" onclick="openPasswordChange()" title="Change Password">🔑</button>
         <div class="user-avatar" id="userAvatarSmall">R</div>
         <div class="user-name" id="displayName">User</div>
         <div class="user-email" id="displayEmail">email@company.com</div>
@@ -1481,7 +1561,7 @@
             <h1>Team Members</h1>
             <div class="page-desc">Manage team and permissions</div>
           </div>
-          <button class="btn-primary" onclick="openUserModal()">
+          <button class="btn-primary" id="addUserBtn" onclick="openUserModal()">
             <span>➕</span>
             <span>Add User</span>
           </button>
@@ -1494,6 +1574,8 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Department</th>
+                <th>Designation</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -1512,6 +1594,100 @@
           </div>
         </div>
         <div id="auditContainer"></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="view" id="settings">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Settings</h1>
+            <div class="page-desc">Manage your profile and preferences</div>
+          </div>
+        </div>
+
+        <div class="data-card" style="margin-bottom: 20px;">
+          <div class="card-header">🖼️ Choose Your Avatar</div>
+          <div class="card-content">
+            <div class="avatar-picker-row">
+              <div id="settingsAvatarPreview" style="width: 48px; height: 48px; min-width: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; overflow: hidden;">U</div>
+              <div id="avatarGrid" class="avatar-grid"></div>
+              <input type="file" id="settingsProfilePicInput" accept="image/*" onchange="handleProfilePicChange(event)" style="display: none;">
+              <button type="button" class="btn-cancel" style="padding: 8px 14px; font-size: 11px;" onclick="document.getElementById('settingsProfilePicInput').click()">📷 Upload</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="data-card">
+            <div class="card-header">🎨 Appearance</div>
+            <div class="card-content">
+              <div class="stat-item">
+                <div class="stat-label">Theme Mode</div>
+                <button class="theme-toggle" style="width: auto; margin-bottom: 0;" onclick="toggleTheme()">
+                  <span id="settingsThemeIcon">🌙</span>
+                  <span id="settingsThemeText">Dark Mode</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="data-card" style="margin-bottom: 20px;">
+          <div class="card-header">👤 Profile Details</div>
+          <div class="card-content">
+            <form onsubmit="saveProfileDetails(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">👤 Full Name</label>
+                  <input type="text" id="settingsName" class="form-input" required>
+                  <div id="settingsNameHint" style="display: none; font-size: 11px; color: var(--text-soft); margin-top: 6px;">🔒 Only an Admin can change your name</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">📧 Email</label>
+                  <input type="email" id="settingsEmail" class="form-input" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">🏬 Department</label>
+                  <input type="text" id="settingsDepartment" class="form-input" placeholder="Sales, Marketing, etc">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">💼 Designation</label>
+                  <input type="text" id="settingsDesignation" class="form-input" placeholder="Sales Manager, Sales Rep, etc">
+                </div>
+              </div>
+              <button type="submit" class="btn-success">✓ Save Profile</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="data-card" id="changePasswordCard">
+          <div class="card-header">🔒 Change Password</div>
+          <div class="card-content">
+            <form onsubmit="changePassword(event)">
+              <div id="passwordChangeError" class="error-msg"></div>
+              <div id="passwordChangeSuccess" class="error-msg" style="background: rgba(21, 128, 61, 0.15); color: var(--success); border-left-color: var(--success);"></div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">🔑 Current Password</label>
+                  <input type="password" id="currentPassword" class="form-input" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">🔒 New Password</label>
+                  <input type="password" id="newPassword" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">🔒 Confirm New Password</label>
+                  <input type="password" id="confirmPassword" class="form-input" required>
+                </div>
+              </div>
+              <button type="submit" class="btn-success">✓ Update Password</button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1650,8 +1826,7 @@
             <label class="form-label">🎯 Role</label>
             <select id="userRole" class="form-select" required>
               <option value="Admin">👑 Admin</option>
-              <option value="Sales Manager">📊 Sales Manager</option>
-              <option value="Sales Rep">💼 Sales Rep</option>
+              <option value="Standard">👤 Standard</option>
             </select>
           </div>
           <div class="form-group">
@@ -1660,6 +1835,16 @@
               <option value="Active">✓ Active</option>
               <option value="Inactive">⏸️ Inactive</option>
             </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">🏬 Department</label>
+            <input type="text" id="userDepartment" class="form-input" placeholder="Sales, Marketing, etc">
+          </div>
+          <div class="form-group">
+            <label class="form-label">💼 Designation</label>
+            <input type="text" id="userDesignation" class="form-input" placeholder="Sales Manager, Sales Rep, etc">
           </div>
         </div>
       </div>
@@ -1683,19 +1868,26 @@
   let editingUser = null;
 
   // THEME
+  function setThemeLabels(icon, text) {
+    document.getElementById('themeIcon').textContent = icon;
+    document.getElementById('themeText').textContent = text;
+    const sIcon = document.getElementById('settingsThemeIcon');
+    const sText = document.getElementById('settingsThemeText');
+    if (sIcon) sIcon.textContent = icon;
+    if (sText) sText.textContent = text;
+  }
+
   window.toggleTheme = function() {
     const html = document.documentElement;
     const isDark = html.classList.contains('dark');
     if (isDark) {
       html.classList.remove('dark');
       localStorage.setItem('gokul_theme', 'light');
-      document.getElementById('themeIcon').textContent = '🌙';
-      document.getElementById('themeText').textContent = 'Dark Mode';
+      setThemeLabels('🌙', 'Dark Mode');
     } else {
       html.classList.add('dark');
       localStorage.setItem('gokul_theme', 'dark');
-      document.getElementById('themeIcon').textContent = '☀️';
-      document.getElementById('themeText').textContent = 'Light Mode';
+      setThemeLabels('☀️', 'Light Mode');
     }
   };
 
@@ -1703,8 +1895,7 @@
     const savedTheme = localStorage.getItem('gokul_theme') || 'light';
     if (savedTheme === 'dark') {
       document.documentElement.classList.add('dark');
-      document.getElementById('themeIcon').textContent = '☀️';
-      document.getElementById('themeText').textContent = 'Light Mode';
+      setThemeLabels('☀️', 'Light Mode');
     }
   }
 
@@ -1735,9 +1926,9 @@
     }
     if (users.length === 0) {
       users = [
-        { id: 1, name: 'Rahul Sharma', email: 'test@test.com', role: 'Admin', active: true },
-        { id: 2, name: 'Priya Nair', email: 'rahul@yourcompany.com', role: 'Sales Manager', active: true },
-        { id: 3, name: 'Arjun Singh', email: 'simran@yourcompany.com', role: 'Sales Rep', active: true }
+        { id: 1, name: 'Rahul Sharma', email: 'test@test.com', role: 'Admin', active: true, password: 'pass@123', department: 'Sales', designation: 'CRM Administrator', profilePic: '' },
+        { id: 2, name: 'Priya Nair', email: 'rahul@yourcompany.com', role: 'Standard', active: true, password: 'pass@123', department: 'Sales', designation: 'Sales Manager', profilePic: '' },
+        { id: 3, name: 'Arjun Singh', email: 'simran@yourcompany.com', role: 'Standard', active: true, password: 'pass@123', department: 'Sales', designation: 'Sales Representative', profilePic: '' }
       ];
       saveToStorage();
     }
@@ -1768,8 +1959,8 @@
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const user = users.find(u => u.email === email && password === 'pass@123');
-    
+    const user = users.find(u => u.email === email && password === (u.password || 'pass@123'));
+
     if (!user) {
       const errorEl = document.getElementById('loginError');
       errorEl.textContent = '❌ Invalid credentials';
@@ -1781,12 +1972,63 @@
     currentUser = user;
     document.getElementById('loginPage').classList.add('hidden');
     document.getElementById('appPage').classList.remove('hidden');
-    document.getElementById('displayName').textContent = user.name;
-    document.getElementById('displayEmail').textContent = user.email;
-    document.getElementById('userAvatarSmall').textContent = user.name.charAt(0);
+    updateUserPanel();
+    applyRolePermissions();
     populateAssignees();
     renderAll();
   };
+
+  function isAdmin() {
+    return !!currentUser && currentUser.role === 'Admin';
+  }
+
+  function applyRolePermissions() {
+    const navUsers = document.getElementById('navUsers');
+    if (navUsers) navUsers.style.display = isAdmin() ? '' : 'none';
+    const addUserBtn = document.getElementById('addUserBtn');
+    if (addUserBtn) addUserBtn.style.display = isAdmin() ? '' : 'none';
+  }
+
+  const avatarList = [
+    { id: 'm1', seed: 'Adrian87', label: 'Adrian', color: '3b82f6' },
+    { id: 'm2', seed: 'KaiRoss', label: 'Kai', color: 'f97316' },
+    { id: 'm3', seed: 'LeoMartin', label: 'Leo', color: '10b981' },
+    { id: 'm4', seed: 'DiegoVibe', label: 'Diego', color: '64748b' },
+    { id: 'm5', seed: 'FelixNova', label: 'Felix', color: 'ef4444' },
+    { id: 'f1', seed: 'SophieRae', label: 'Sophie', color: 'a855f7' },
+    { id: 'f2', seed: 'NoraSky', label: 'Nora', color: 'f43f5e' },
+    { id: 'f3', seed: 'MayaLuxe', label: 'Maya', color: '14b8a6' },
+    { id: 'f4', seed: 'ElenaBlu', label: 'Elena', color: '6366f1' },
+    { id: 'f5', seed: 'AriaGlow', label: 'Aria', color: 'eab308' }
+  ].map(a => ({ ...a, url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${a.seed}&backgroundColor=${a.color}&radius=50` }));
+
+  function getAvatarMarkup(user) {
+    const pic = user.profilePic || '';
+    if (pic.startsWith('data:')) {
+      return `<img src="${pic}" style="width:100%;height:100%;object-fit:cover;">`;
+    }
+    if (pic.startsWith('avatar:')) {
+      const avatar = avatarList.find(a => a.id === pic.replace('avatar:', ''));
+      if (avatar) return `<img src="${avatar.url}" style="width:100%;height:100%;object-fit:cover;">`;
+    }
+    return user.name.charAt(0);
+  }
+
+  function applyAvatarToElement(el, user) {
+    el.innerHTML = getAvatarMarkup(user);
+    const pic = user.profilePic || '';
+    if (!pic.startsWith('avatar:') && !pic.startsWith('data:')) {
+      el.style.background = 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)';
+    } else {
+      el.style.background = 'transparent';
+    }
+  }
+
+  function updateUserPanel() {
+    document.getElementById('displayName').textContent = currentUser.name;
+    document.getElementById('displayEmail').textContent = currentUser.email;
+    applyAvatarToElement(document.getElementById('userAvatarSmall'), currentUser);
+  }
 
   window.handleLogout = function() {
     currentUser = null;
@@ -1797,10 +2039,33 @@
   };
 
   window.showTab = function(tab) {
+    if (tab === 'users' && !isAdmin()) {
+      alert('🔒 Only an Admin can access Team Members');
+      return;
+    }
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById(tab).classList.add('active');
-    event.target.closest('.nav-item').classList.add('active');
+    if (typeof event !== 'undefined' && event && event.target) {
+      const navBtn = event.target.closest('.nav-item');
+      if (navBtn) navBtn.classList.add('active');
+    }
+    if (tab === 'settings') renderSettings();
+  };
+
+  window.openPasswordChange = function() {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('settings').classList.add('active');
+    const navBtn = document.querySelector('.nav-item[onclick*="settings"]');
+    if (navBtn) navBtn.classList.add('active');
+    renderSettings();
+    setTimeout(() => {
+      const card = document.getElementById('changePasswordCard');
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const input = document.getElementById('currentPassword');
+      if (input) input.focus();
+    }, 50);
   };
 
   // AI SEARCH
@@ -2076,6 +2341,7 @@
   };
 
   window.editLead = function(id) {
+    if (!isAdmin()) { alert('🔒 Only an Admin can edit leads'); return; }
     editingLead = leads.find(l => l.id === id);
     leadRowCount = 0;
     document.getElementById('leadModalTitle').textContent = '✏️ Edit Lead';
@@ -2090,6 +2356,7 @@
   };
 
   window.deleteLead = function(id) {
+    if (!isAdmin()) { alert('🔒 Only an Admin can delete leads'); return; }
     if (confirm('🗑️ Delete this lead?')) {
       const lead = leads.find(l => l.id === id);
       leads = leads.filter(l => l.id !== id);
@@ -2163,6 +2430,7 @@
   };
 
   window.editTask = function(id) {
+    if (!isAdmin()) { alert('🔒 Only an Admin can edit tasks'); return; }
     editingTask = tasks.find(t => t.id === id);
     document.getElementById('taskModalTitle').textContent = '✏️ Edit Task';
     document.getElementById('taskTitle').value = editingTask.title;
@@ -2174,6 +2442,7 @@
   };
 
   window.deleteTask = function(id) {
+    if (!isAdmin()) { alert('🔒 Only an Admin can delete tasks'); return; }
     if (confirm('🗑️ Delete this task?')) {
       const task = tasks.find(t => t.id === id);
       tasks = tasks.filter(t => t.id !== id);
@@ -2186,12 +2455,15 @@
 
   // USER FUNCTIONS
   window.openUserModal = function() {
+    if (!isAdmin()) { alert('🔒 Only an Admin can add users'); return; }
     editingUser = null;
     document.getElementById('userModalTitle').textContent = '👥 Add New User';
     document.getElementById('userName').value = '';
     document.getElementById('userEmail').value = '';
-    document.getElementById('userRole').value = 'Sales Rep';
+    document.getElementById('userRole').value = 'Standard';
     document.getElementById('userStatus').value = 'Active';
+    document.getElementById('userDepartment').value = '';
+    document.getElementById('userDesignation').value = '';
     document.getElementById('userModal').classList.add('active');
   };
 
@@ -2206,13 +2478,18 @@
       name: document.getElementById('userName').value,
       email: document.getElementById('userEmail').value,
       role: document.getElementById('userRole').value,
-      active: document.getElementById('userStatus').value === 'Active'
+      active: document.getElementById('userStatus').value === 'Active',
+      department: document.getElementById('userDepartment').value,
+      designation: document.getElementById('userDesignation').value,
+      password: editingUser ? editingUser.password : 'pass@123',
+      profilePic: editingUser ? editingUser.profilePic : ''
     };
 
     if (editingUser) {
       const idx = users.findIndex(u => u.id === editingUser.id);
       users[idx] = user;
       addAuditLog('Updated User', 'User', user.name);
+      if (currentUser && currentUser.id === user.id) { currentUser = user; updateUserPanel(); }
     } else {
       users.push(user);
       addAuditLog('Added User', 'User', user.name);
@@ -2224,16 +2501,20 @@
   };
 
   window.editUser = function(id) {
+    if (!isAdmin()) { alert('🔒 Only an Admin can edit users'); return; }
     editingUser = users.find(u => u.id === id);
     document.getElementById('userModalTitle').textContent = '✏️ Edit User';
     document.getElementById('userName').value = editingUser.name;
     document.getElementById('userEmail').value = editingUser.email;
     document.getElementById('userRole').value = editingUser.role;
     document.getElementById('userStatus').value = editingUser.active ? 'Active' : 'Inactive';
+    document.getElementById('userDepartment').value = editingUser.department || '';
+    document.getElementById('userDesignation').value = editingUser.designation || '';
     document.getElementById('userModal').classList.add('active');
   };
 
   window.deleteUser = function(id) {
+    if (!isAdmin()) { alert('🔒 Only an Admin can delete users'); return; }
     if (confirm('🗑️ Delete this user?')) {
       const user = users.find(u => u.id === id);
       users = users.filter(u => u.id !== id);
@@ -2317,26 +2598,35 @@
       </div>
     `;
 
-    // Task Status Breakdown
-    const taskStats = { 'To Do': 0, 'In Progress': 0, 'Done': 0 };
-    tasks.forEach(t => taskStats[t.status]++);
-    document.getElementById('taskStatusBreakdown').innerHTML = `
-      ${Object.entries(taskStats).map(([status, count]) => {
-        const percent = tasks.length > 0 ? (count / tasks.length * 100).toFixed(0) : 0;
-        return `
-          <div class="stat-item">
-            <div class="stat-label">📊 ${status}</div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div class="stat-value">${count}</div>
-              <div style="width: 100px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;">
-                <div style="width: ${percent}%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary));"></div>
-              </div>
-              <span style="font-size: 11px; color: var(--text-soft); min-width: 30px;">${percent}%</span>
+    // Task Status Breakdown (full task details grouped by status)
+    const statusOrder = ['To Do', 'In Progress', 'Done'];
+    const statusIcon = { 'To Do': '📋', 'In Progress': '⏳', 'Done': '✓' };
+    document.getElementById('taskStatusBreakdown').innerHTML = tasks.length === 0
+      ? '<div style="text-align: center; color: var(--text-soft); padding: 20px;">No tasks yet</div>'
+      : statusOrder.map(status => {
+          const group = tasks.filter(t => t.status === status);
+          if (group.length === 0) return '';
+          return `
+            <div style="margin-bottom: 16px;">
+              <div style="font-size: 12px; font-weight: 700; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">${statusIcon[status]} ${status} (${group.length})</div>
+              ${group.map(t => {
+                const user = users.find(u => u.id === t.assignedTo);
+                return `
+                  <div class="stat-item">
+                    <div class="stat-label">
+                      <div style="font-weight: 700;">${t.title}</div>
+                      <div style="font-size: 11px; color: var(--text-soft); margin-top: 2px;">${t.description || 'No description'}</div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-size: 12px; font-weight: 700; color: var(--text);">${user ? user.name : '—'}</div>
+                      <div style="font-size: 11px; color: var(--text-soft); margin-top: 2px;">📅 ${t.dueDate}</div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
             </div>
-          </div>
-        `;
-      }).join('')}
-    `;
+          `;
+        }).join('');
 
     // Lead Stage Distribution
     const stageStats = {};
@@ -2537,10 +2827,12 @@
                 </div>
               </div>
               <div style="display: flex; justify-content: flex-end; align-items: center; padding-top: 12px; border-top: 1px solid var(--border);">
+                ${isAdmin() ? `
                 <div class="action-buttons">
                   <button class="btn-sm btn-sm-edit" onclick="editLead(${l.id})">✏️</button>
                   <button class="btn-sm btn-sm-delete" onclick="deleteLead(${l.id})">🗑️</button>
                 </div>
+                ` : ''}
               </div>
             </div>
           `;
@@ -2603,10 +2895,12 @@
           <td>${user ? user.name : '—'}</td>
           <td>${t.dueDate}</td>
           <td>
+            ${isAdmin() ? `
             <div class="action-buttons">
               <button class="btn-sm btn-sm-edit" onclick="editTask(${t.id})">✏️</button>
               <button class="btn-sm btn-sm-delete" onclick="deleteTask(${t.id})">🗑️</button>
             </div>
+            ` : '—'}
           </td>
         </tr>
       `;
@@ -2632,6 +2926,8 @@
         <td><strong>${u.name}</strong></td>
         <td>${u.email}</td>
         <td>${u.role}</td>
+        <td>${u.department || '—'}</td>
+        <td>${u.designation || '—'}</td>
         <td><span class="badge ${getStatusBadge(u.active ? 'Active' : 'Inactive')}">${u.active ? 'Active' : 'Inactive'}</span></td>
         <td>
           <div class="action-buttons">
@@ -2656,6 +2952,121 @@
       `;
     }).join('');
   }
+
+  // SETTINGS
+  function renderSettings() {
+    if (!currentUser) return;
+    const nameInput = document.getElementById('settingsName');
+    nameInput.value = currentUser.name;
+    const isAdmin = currentUser.role === 'Admin';
+    nameInput.disabled = !isAdmin;
+    nameInput.title = isAdmin ? '' : 'Only an Admin can change your name';
+    document.getElementById('settingsNameHint').style.display = isAdmin ? 'none' : 'block';
+    document.getElementById('settingsEmail').value = currentUser.email;
+    document.getElementById('settingsDepartment').value = currentUser.department || '';
+    document.getElementById('settingsDesignation').value = currentUser.designation || '';
+    applyAvatarToElement(document.getElementById('settingsAvatarPreview'), currentUser);
+    renderAvatarGrid();
+    document.getElementById('passwordChangeError').classList.remove('show');
+    document.getElementById('passwordChangeSuccess').classList.remove('show');
+    document.getElementById('currentPassword').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+  }
+
+  function renderAvatarGrid() {
+    const selectedId = (currentUser.profilePic || '').startsWith('avatar:') ? currentUser.profilePic.replace('avatar:', '') : null;
+    document.getElementById('avatarGrid').innerHTML = avatarList.map(a => `
+      <div class="avatar-option ${selectedId === a.id ? 'selected' : ''}" onclick="selectAvatar('${a.id}')" title="${a.label}">
+        <div class="avatar-option-circle"><img src="${a.url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" loading="lazy"></div>
+      </div>
+    `).join('');
+  }
+
+  window.selectAvatar = function(id) {
+    currentUser.profilePic = 'avatar:' + id;
+    const idx = users.findIndex(u => u.id === currentUser.id);
+    if (idx !== -1) users[idx] = currentUser;
+    saveToStorage();
+    applyAvatarToElement(document.getElementById('settingsAvatarPreview'), currentUser);
+    renderAvatarGrid();
+    updateUserPanel();
+    addAuditLog('Updated Avatar', 'User', currentUser.name);
+  };
+
+  window.handleProfilePicChange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const dataUrl = evt.target.result;
+      document.getElementById('settingsAvatarPreview').innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:cover;">`;
+      currentUser.profilePic = dataUrl;
+      const idx = users.findIndex(u => u.id === currentUser.id);
+      if (idx !== -1) users[idx] = currentUser;
+      saveToStorage();
+      renderAvatarGrid();
+      updateUserPanel();
+      addAuditLog('Updated Profile Picture', 'User', currentUser.name);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.saveProfileDetails = function(e) {
+    e.preventDefault();
+    if (currentUser.role === 'Admin') {
+      currentUser.name = document.getElementById('settingsName').value;
+    }
+    currentUser.email = document.getElementById('settingsEmail').value;
+    currentUser.department = document.getElementById('settingsDepartment').value;
+    currentUser.designation = document.getElementById('settingsDesignation').value;
+    const idx = users.findIndex(u => u.id === currentUser.id);
+    if (idx !== -1) users[idx] = currentUser;
+    saveToStorage();
+    updateUserPanel();
+    populateAssignees();
+    renderUsers();
+    addAuditLog('Updated Profile', 'User', currentUser.name);
+  };
+
+  window.changePassword = function(e) {
+    e.preventDefault();
+    const current = document.getElementById('currentPassword').value;
+    const next = document.getElementById('newPassword').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const errorEl = document.getElementById('passwordChangeError');
+    const successEl = document.getElementById('passwordChangeSuccess');
+    errorEl.classList.remove('show');
+    successEl.classList.remove('show');
+
+    if (current !== (currentUser.password || 'pass@123')) {
+      errorEl.textContent = '❌ Current password is incorrect';
+      errorEl.classList.add('show');
+      return;
+    }
+    if (next !== confirm) {
+      errorEl.textContent = '❌ New passwords do not match';
+      errorEl.classList.add('show');
+      return;
+    }
+    if (next.length < 4) {
+      errorEl.textContent = '❌ New password must be at least 4 characters';
+      errorEl.classList.add('show');
+      return;
+    }
+
+    currentUser.password = next;
+    const idx = users.findIndex(u => u.id === currentUser.id);
+    if (idx !== -1) users[idx] = currentUser;
+    saveToStorage();
+    addAuditLog('Changed Password', 'User', currentUser.name);
+
+    successEl.textContent = '✓ Password updated successfully';
+    successEl.classList.add('show');
+    document.getElementById('currentPassword').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+  };
 
   function renderAll() {
     if (!currentUser) return;
