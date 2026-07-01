@@ -2674,7 +2674,35 @@
   </div>
 </div>
 
+<div id="fsLoadingOverlay" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,0.85);align-items:center;justify-content:center;flex-direction:column;gap:16px;">
+  <div style="width:44px;height:44px;border:4px solid rgba(255,255,255,0.2);border-top-color:#3b82f6;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+  <p style="color:#f9fafb;font-size:15px;font-family:Segoe UI,sans-serif;">Connecting to cloud...</p>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+// Firebase init (outside IIFE so db is globally accessible)
+const _fbApp = firebase.initializeApp({
+  apiKey: "AIzaSyDgVdzVQweKJofdWPjrBY_A1oJkEGXUv7U",
+  authDomain: "gokul-crm-8d88e.firebaseapp.com",
+  projectId: "gokul-crm-8d88e",
+  storageBucket: "gokul-crm-8d88e.firebasestorage.app",
+  messagingSenderId: "630132860794",
+  appId: "1:630132860794:web:dd4c465c647a61a84ed8c3"
+});
+const _db = firebase.firestore();
+
+async function _fsGet(docId) {
+  try { const d = await _db.collection('gokul_data').doc(docId).get(); return d.exists ? d.data() : null; }
+  catch(e) { return null; }
+}
+function _fsSet(docId, data) {
+  try { _db.collection('gokul_data').doc(docId).set(data); } catch(e) {}
+}
+</script>
 <script>
 (function() {
   let currentUser = null;
@@ -2746,6 +2774,12 @@
     localStorage.setItem('gokul_tasks', JSON.stringify(tasks));
     localStorage.setItem('gokul_audit', JSON.stringify(auditLogs));
     localStorage.setItem('gokul_quotations', JSON.stringify(quotations));
+    // sync to Firestore (fire-and-forget)
+    _fsSet('leads', { items: leads });
+    _fsSet('users', { items: users });
+    _fsSet('tasks', { items: tasks });
+    _fsSet('audit', { items: auditLogs });
+    _fsSet('quotations', { items: quotations });
   }
 
   function loadFromStorage() {
@@ -2754,6 +2788,21 @@
     tasks = JSON.parse(localStorage.getItem('gokul_tasks')) || [];
     auditLogs = JSON.parse(localStorage.getItem('gokul_audit')) || [];
     quotations = JSON.parse(localStorage.getItem('gokul_quotations')) || [];
+  }
+
+  async function loadFromFirestore() {
+    const [l, u, t, a, q, cs, ss] = await Promise.all([
+      _fsGet('leads'), _fsGet('users'), _fsGet('tasks'),
+      _fsGet('audit'), _fsGet('quotations'),
+      _fsGet('company_settings'), _fsGet('smtp_settings')
+    ]);
+    if (l) { leads = l.items || []; localStorage.setItem('gokul_leads', JSON.stringify(leads)); }
+    if (u) { users = u.items || []; localStorage.setItem('gokul_users', JSON.stringify(users)); }
+    if (t) { tasks = t.items || []; localStorage.setItem('gokul_tasks', JSON.stringify(tasks)); }
+    if (a) { auditLogs = a.items || []; localStorage.setItem('gokul_audit', JSON.stringify(auditLogs)); }
+    if (q) { quotations = q.items || []; localStorage.setItem('gokul_quotations', JSON.stringify(quotations)); }
+    if (cs) localStorage.setItem('gokul_company_settings', JSON.stringify(cs));
+    if (ss) localStorage.setItem('gokul_smtp_settings', JSON.stringify(ss));
   }
 
   function initData() {
@@ -2897,6 +2946,7 @@
       const settings = getCompanySettings();
       settings.logo = dataUrl;
       localStorage.setItem('gokul_company_settings', JSON.stringify(settings));
+      _fsSet('company_settings', settings);
     };
     reader.readAsDataURL(file);
   };
@@ -2918,6 +2968,7 @@
       logo: existing.logo || ''
     };
     localStorage.setItem('gokul_company_settings', JSON.stringify(settings));
+    _fsSet('company_settings', settings);
     addAuditLog('Updated Company Details', 'Settings', settings.name);
     const successEl = document.getElementById('companySaveSuccess');
     successEl.textContent = '✓ Company details saved';
@@ -4647,6 +4698,7 @@
       encryption: document.getElementById('smtpEncryption').value
     };
     localStorage.setItem('gokul_smtp_settings', JSON.stringify(settings));
+    _fsSet('smtp_settings', settings);
     addAuditLog('Updated SMTP Settings', 'Settings', settings.host || 'SMTP');
     const successEl = document.getElementById('smtpSaveSuccess');
     successEl.textContent = '✓ SMTP settings saved';
@@ -4758,10 +4810,16 @@
     renderReports();
   }
 
-  loadFromStorage();
-  initData();
-  initTheme();
-  initSidebarState();
+  async function bootApp() {
+    const overlay = document.getElementById('fsLoadingOverlay');
+    if (overlay) overlay.style.display = 'flex';
+    try { await loadFromFirestore(); } catch(e) { loadFromStorage(); }
+    initData();
+    if (overlay) overlay.style.display = 'none';
+    initTheme();
+    initSidebarState();
+  }
+  bootApp();
 })();
 </script>
 
