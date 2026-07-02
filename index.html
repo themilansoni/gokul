@@ -2506,6 +2506,36 @@
         </div>
         <div class="form-row">
           <div class="form-group">
+            <label class="form-label">🚦 Priority</label>
+            <select id="taskPriority" class="form-select">
+              <option value="Low">🟢 Low</option>
+              <option value="Medium" selected>🟡 Medium</option>
+              <option value="High">🔴 High</option>
+              <option value="Critical">🚨 Critical</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">🏬 Department</label>
+            <input type="text" id="taskDepartment" class="form-input" placeholder="e.g. Sales, Operations...">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">🏢 Customer / Company</label>
+            <select id="taskCustomer" class="form-select">
+              <option value="">— None —</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">📦 Product</label>
+            <div style="display:flex;gap:6px;">
+              <input type="text" id="taskProduct" class="form-input" placeholder="Product / service...">
+              <button type="button" class="btn-primary" onclick="openItemPicker('taskProduct')" style="white-space:nowrap;padding:0 12px;font-size:12px;">📦</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
             <label class="form-label">📊 Status</label>
             <select id="taskStatus" class="form-select" required>
               <option value="To Do">📋 To Do</option>
@@ -2527,6 +2557,10 @@
             <label class="form-label">🔔 Next Follow-up Date</label>
             <input type="date" id="taskFollowUp" class="form-input">
           </div>
+        </div>
+        <div id="taskHistorySection" style="display:none;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="font-weight:600;margin-bottom:8px;font-size:13px;">📋 Task History</div>
+          <div id="taskHistoryList" style="max-height:150px;overflow-y:auto;font-size:12px;"></div>
         </div>
       </div>
       <div class="modal-footer">
@@ -2565,13 +2599,19 @@
 
 <!-- Edit Quotation Modal -->
 <div class="modal" id="quotationModal">
-  <div class="modal-content">
+  <div class="modal-content" style="max-width:900px;">
     <div class="modal-header">
       <h3 class="modal-title" id="quotationModalTitle">📄 Edit Quotation</h3>
-      <button class="modal-close" onclick="closeQuotationModal()">×</button>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button type="button" class="btn-primary" style="font-size:12px;padding:6px 12px;" onclick="printQuotation(window._editingQuotationId,'customer')">🖨️ Customer View</button>
+        <button type="button" class="btn-primary" style="font-size:12px;padding:6px 12px;background:var(--secondary);" onclick="printQuotation(window._editingQuotationId,'internal')">🏭 Internal View</button>
+        <button class="modal-close" onclick="closeQuotationModal()">×</button>
+      </div>
     </div>
     <form onsubmit="saveQuotationEdit(event)">
       <div class="modal-body">
+        <!-- Customer Info -->
+        <div style="font-weight:700;font-size:13px;margin-bottom:10px;color:var(--primary);">👤 Customer Information</div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">🏢 Company</label>
@@ -2592,36 +2632,100 @@
             <input type="tel" id="quotePhone" class="form-input">
           </div>
         </div>
+
+        <!-- Line Items -->
+        <div style="font-weight:700;font-size:13px;margin:16px 0 10px;color:var(--primary);">📦 Line Items</div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:12px;" id="quoteLineTable">
+            <thead>
+              <tr style="background:var(--gray-100);text-align:left;">
+                <th style="padding:8px 6px;min-width:140px;">Item</th>
+                <th style="padding:8px 6px;min-width:55px;">Qty</th>
+                <th style="padding:8px 6px;min-width:60px;">Unit</th>
+                <th style="padding:8px 6px;min-width:90px;color:var(--text-soft);">Cost ₹ <span style="font-size:10px;">(int)</span></th>
+                <th style="padding:8px 6px;min-width:80px;color:var(--text-soft);">Freight ₹ <span style="font-size:10px;">(int)</span></th>
+                <th style="padding:8px 6px;min-width:80px;color:var(--text-soft);">Other ₹ <span style="font-size:10px;">(int)</span></th>
+                <th style="padding:8px 6px;min-width:95px;">Sell Price ₹</th>
+                <th style="padding:8px 6px;min-width:65px;">GST %</th>
+                <th style="padding:8px 6px;min-width:80px;color:var(--text-soft);">Margin ₹ <span style="font-size:10px;">(int)</span></th>
+                <th style="padding:8px 6px;width:36px;"></th>
+              </tr>
+            </thead>
+            <tbody id="quoteLineBody"></tbody>
+          </table>
+        </div>
+        <button type="button" class="btn-primary" style="margin-top:8px;font-size:12px;padding:6px 14px;" onclick="addQuoteLine()">+ Add Line Item</button>
+
+        <!-- Summary Panel -->
+        <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+          <div style="background:var(--gray-50);border:1px solid var(--border);border-radius:10px;padding:14px 20px;min-width:260px;font-size:13px;">
+            <div style="font-weight:700;margin-bottom:10px;color:var(--primary);">📊 Summary</div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+              <span>Subtotal</span><span id="qSumSubtotal">₹0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+              <span>Total GST</span><span id="qSumGST">₹0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:700;border-top:2px solid var(--primary);margin-top:4px;color:var(--primary);font-size:14px;">
+              <span>Grand Total</span><span id="qSumGrandTotal">₹0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;color:var(--text-soft);">
+              <span>Total Cost (int)</span><span id="qSumTotalCost">₹0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;color:var(--text-soft);">
+              <span>Total Margin (int)</span><span id="qSumMargin">₹0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;color:var(--text-soft);">
+              <span>Margin % (int)</span><span id="qSumMarginPct">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div style="font-weight:700;font-size:13px;margin:16px 0 10px;color:var(--primary);">📋 Terms & Details</div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">💰 Quote Value (₹)</label>
-            <input type="number" id="quoteValue" class="form-input" required>
+            <label class="form-label">💳 Payment Terms</label>
+            <select id="quotePaymentTerms" class="form-select">
+              <option value="100% Advance">100% Advance</option>
+              <option value="50% Advance 50% on Delivery">50% Advance 50% on Delivery</option>
+              <option value="Net 30">Net 30</option>
+              <option value="Net 60">Net 60</option>
+              <option value="Net 90">Net 90</option>
+              <option value="LC at Sight">LC at Sight</option>
+            </select>
           </div>
           <div class="form-group">
             <label class="form-label">📅 Valid Till</label>
             <input type="date" id="quoteValidTill" class="form-input" required>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">📦 Products / Services</label>
-          <div style="display:flex;gap:8px;">
-            <input type="text" id="quoteProducts" class="form-input" placeholder="e.g. CRM License, Implementation Support">
-            <button type="button" class="btn-primary" onclick="openItemPicker('quoteProducts')" style="white-space:nowrap;padding:0 14px;font-size:12px;">📦 Browse</button>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">🚚 Delivery Terms</label>
+            <input type="text" id="quoteDeliveryTerms" class="form-input" placeholder="Ex-works, CIF, FOB...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">📊 Status</label>
+            <select id="quoteStatus" class="form-select" required>
+              <option value="Draft">📋 Draft</option>
+              <option value="Sent">📤 Sent</option>
+              <option value="Accepted">✓ Accepted</option>
+              <option value="Rejected">❌ Rejected</option>
+            </select>
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">📊 Status</label>
-          <select id="quoteStatus" class="form-select" required>
-            <option value="Draft">📋 Draft</option>
-            <option value="Sent">📤 Sent</option>
-            <option value="Accepted">✓ Accepted</option>
-            <option value="Rejected">❌ Rejected</option>
-          </select>
+          <label class="form-label">🔒 Internal Notes</label>
+          <textarea id="quoteNotes" class="form-textarea" style="min-height:70px;" placeholder="Internal notes (not shown to customer)..."></textarea>
         </div>
         <div class="form-group">
-          <label class="form-label">📝 Notes</label>
-          <textarea id="quoteNotes" class="form-textarea" style="min-height: 80px;"></textarea>
+          <label class="form-label">📝 Customer Notes</label>
+          <textarea id="quoteCustomerNotes" class="form-textarea" style="min-height:70px;" placeholder="Notes shown to customer on printed quotation..."></textarea>
         </div>
+        <!-- Hidden legacy fields for backward compatibility -->
+        <input type="hidden" id="quoteValue">
+        <input type="hidden" id="quoteProducts">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-cancel" onclick="closeQuotationModal()">Cancel</button>
@@ -2861,6 +2965,7 @@ function _fsSet(docId, data) {
 </script>
 <script>
 (function() {
+  // SAP B1 mapping: leads→OCRD (Business Partners), quotations→OQUT/QUT1, tasks→custom, items→OITM
   let currentUser = null;
   let leads = [];
   let users = [];
@@ -2872,6 +2977,9 @@ function _fsSet(docId, data) {
   let editingLead = null;
   let editingTask = null;
   let editingUser = null;
+
+  // Global line items array for current quotation being edited
+  let quoteLineItems = [];
 
   // THEME
   function setThemeLabels(icon, text) {
@@ -3804,7 +3912,11 @@ function _fsSet(docId, data) {
       status: 'Draft',
       issueDate: issueDate,
       validTill: validTill,
-      notes: lead.notes || ''
+      notes: lead.notes || '',
+      lineItems: [],
+      paymentTerms: '50% Advance 50% on Delivery',
+      deliveryTerms: '',
+      customerNotes: ''
     };
     quotations.push(quotation);
     addAuditLog(revision > 1 ? 'New Quotation Revision' : 'Lead Converted to Quotation', 'Quotation', `${quoteNo} (${lead.company})`);
@@ -3839,24 +3951,90 @@ function _fsSet(docId, data) {
       .catch(() => { btn.textContent = '❌ Failed'; setTimeout(() => { btn.textContent = '✉️ Email'; btn.disabled = false; }, 3000); });
   };
 
-  window.printQuotation = function(id) {
+  window.printQuotation = function(id, viewType) {
+    viewType = viewType || 'customer';
     const q = quotations.find(x => x.id === id);
     if (!q) return;
     const preparedBy = users.find(u => u.id === q.assignedTo);
-    const gst = (q.value * 0.18);
-    const totalWithTax = q.value + gst;
     const company = getCompanySettings();
     const companyContactLine = [company.address, company.phone, company.email, company.website].filter(Boolean).join(' • ');
+    const isInternal = viewType === 'internal';
+
+    // Build line items rows
+    const lineItems = q.lineItems && q.lineItems.length > 0 ? q.lineItems : [];
+    let subtotal = 0, totalGST = 0, totalCost = 0, totalMargin = 0;
+
+    const lineRows = lineItems.map((li, i) => {
+      const lineTotal = (li.sellingPrice || 0) * (li.qty || 1);
+      const lineCost = ((li.costPrice || 0) + (li.freight || 0) + (li.other || 0)) * (li.qty || 1);
+      const gstAmt = lineTotal * ((li.gst || 0) / 100);
+      const margin = lineTotal - lineCost;
+      subtotal += lineTotal;
+      totalGST += gstAmt;
+      totalCost += lineCost;
+      totalMargin += margin;
+
+      const internalCols = isInternal ? `
+        <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;color:#6b7280;">${(li.costPrice||0).toLocaleString('en-IN')}</td>
+        <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;color:#6b7280;">${(li.freight||0).toLocaleString('en-IN')}</td>
+        <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;color:#6b7280;">${(li.other||0).toLocaleString('en-IN')}</td>
+      ` : '';
+      const marginCol = isInternal ? `<td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;color:#6b7280;">${margin.toLocaleString('en-IN',{maximumFractionDigits:2})}</td>` : '';
+
+      return `<tr>
+        <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;">${li.itemName || '—'}</td>
+        <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;">${li.qty||1}</td>
+        <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;">${li.unit||'Nos'}</td>
+        ${internalCols}
+        <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;">${(li.sellingPrice||0).toLocaleString('en-IN')}</td>
+        <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;">${li.gst||0}%</td>
+        <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;text-align:right;">${lineTotal.toLocaleString('en-IN',{maximumFractionDigits:2})}</td>
+        ${marginCol}
+      </tr>`;
+    }).join('');
+
+    // Fallback if no line items — use legacy value field
+    const grandTotal = subtotal + totalGST || (q.value || 0) * 1.18;
+    const displaySubtotal = subtotal || q.value || 0;
+    const displayGST = totalGST || (q.value || 0) * 0.18;
+    const displayGrand = grandTotal;
+
+    const internalHeaderCols = isInternal ? `
+      <th style="background:#f3f4f6;padding:10px 8px;font-size:11px;color:#6b7280;border-bottom:2px solid #e5e7eb;">Cost ₹</th>
+      <th style="background:#f3f4f6;padding:10px 8px;font-size:11px;color:#6b7280;border-bottom:2px solid #e5e7eb;">Freight ₹</th>
+      <th style="background:#f3f4f6;padding:10px 8px;font-size:11px;color:#6b7280;border-bottom:2px solid #e5e7eb;">Other ₹</th>
+    ` : '';
+    const marginHeaderCol = isInternal ? `<th style="background:#f3f4f6;padding:10px 8px;font-size:11px;color:#6b7280;border-bottom:2px solid #e5e7eb;">Margin ₹</th>` : '';
+
+    const internalSummary = isInternal ? `
+      <div style="display:flex;justify-content:space-between;padding:5px 0;color:#6b7280;font-size:13px;">
+        <span>Total Cost</span><span>₹${totalCost.toLocaleString('en-IN',{maximumFractionDigits:2})}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:5px 0;color:#6b7280;font-size:13px;">
+        <span>Total Margin</span><span>₹${totalMargin.toLocaleString('en-IN',{maximumFractionDigits:2})}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:5px 0;color:#6b7280;font-size:13px;">
+        <span>Margin %</span><span>${displaySubtotal > 0 ? ((totalMargin/displaySubtotal)*100).toFixed(1) : 0}%</span>
+      </div>
+    ` : '';
+
+    const internalBanner = isInternal ? `<div style="background:#fef3c7;border:1px solid #d97706;border-radius:6px;padding:8px 14px;margin-bottom:16px;font-size:12px;color:#92400e;font-weight:600;">🏭 INTERNAL VIEW — Contains cost and margin data. Not for customer distribution.</div>` : '';
+
+    const legacyRow = lineItems.length === 0 ? `<tr>
+      <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;" colspan="${isInternal ? 8 : 5}">${q.products || 'Products / Services as discussed'}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #e5e7eb;text-align:right;">${(q.value||0).toLocaleString('en-IN')}</td>
+      ${isInternal ? '<td></td>' : ''}
+    </tr>` : lineRows;
 
     const html = `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="UTF-8">
-        <title>${q.quoteNo} - ${q.company}</title>
+        <title>${q.quoteNo} - ${q.company}${isInternal ? ' [INTERNAL]' : ''}</title>
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #111827; padding: 50px; max-width: 800px; margin: 0 auto; }
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #111827; padding: 50px; max-width: 960px; margin: 0 auto; }
           .quote-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #1d4ed8; padding-bottom: 20px; margin-bottom: 30px; }
           .quote-header-left { display: flex; align-items: center; gap: 14px; }
           .quote-header-left img { width: 56px; height: 56px; border-radius: 10px; }
@@ -3871,10 +4049,9 @@ function _fsSet(docId, data) {
           .billto-box { flex: 1; }
           .billto-box div { font-size: 14px; margin-bottom: 4px; }
           table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-          th { background: #f3f4f6; text-align: left; padding: 12px; font-size: 12px; text-transform: uppercase; color: #374151; border-bottom: 2px solid #e5e7eb; }
-          td { padding: 14px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+          th { background: #f3f4f6; text-align: left; padding: 10px 8px; font-size: 12px; text-transform: uppercase; color: #374151; border-bottom: 2px solid #e5e7eb; }
           .totals-row { display: flex; justify-content: flex-end; }
-          .totals-table { width: 280px; }
+          .totals-table { width: 300px; }
           .totals-table div { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
           .totals-table .grand-total { border-top: 2px solid #1d4ed8; font-weight: 800; font-size: 16px; color: #1d4ed8; }
           .status-badge { display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: #e0e7ff; color: #1d4ed8; }
@@ -3886,6 +4063,7 @@ function _fsSet(docId, data) {
         </style>
       </head>
       <body>
+        ${internalBanner}
         <div class="quote-header">
           <div class="quote-header-left">
             <img src="${company.logo || 'Gokul_logo.jpg'}" alt="${company.name}">
@@ -3895,7 +4073,7 @@ function _fsSet(docId, data) {
             </div>
           </div>
           <div class="quote-header-right">
-            <div class="quote-title">QUOTATION</div>
+            <div class="quote-title">QUOTATION${isInternal ? ' [INT]' : ''}</div>
             <div class="quote-meta">${q.quoteNo} (R${String(q.revision).padStart(2, '0')})</div>
             <div style="margin-top: 8px;"><span class="status-badge">${q.status}</span></div>
           </div>
@@ -3915,27 +4093,34 @@ function _fsSet(docId, data) {
             <div>Issue Date: <strong>${q.issueDate}</strong></div>
             <div>Valid Till: <strong>${q.validTill}</strong></div>
             <div>Prepared By: <strong>${preparedBy ? preparedBy.name : '—'}</strong></div>
+            ${q.paymentTerms ? `<div>Payment: <strong>${q.paymentTerms}</strong></div>` : ''}
+            ${q.deliveryTerms ? `<div>Delivery: <strong>${q.deliveryTerms}</strong></div>` : ''}
           </div>
         </div>
 
         <div class="section-title">Products / Services</div>
         <table>
           <thead>
-            <tr><th>Description</th><th style="text-align: right;">Amount (₹)</th></tr>
-          </thead>
-          <tbody>
             <tr>
-              <td>${q.products || 'Products / Services as discussed'}${q.notes ? `<br><span style="font-size: 12px; color: #6b7280;">${q.notes}</span>` : ''}</td>
-              <td style="text-align: right;">${q.value.toLocaleString()}</td>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Unit</th>
+              ${internalHeaderCols}
+              <th>Sell Price ₹</th>
+              <th>GST %</th>
+              <th style="text-align:right;">Line Total ₹</th>
+              ${marginHeaderCol}
             </tr>
-          </tbody>
+          </thead>
+          <tbody>${legacyRow}</tbody>
         </table>
 
         <div class="totals-row">
           <div class="totals-table">
-            <div><span>Subtotal</span><span>₹${q.value.toLocaleString()}</span></div>
-            <div><span>GST (18%)</span><span>₹${gst.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span></div>
-            <div class="grand-total"><span>Total</span><span>₹${totalWithTax.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span></div>
+            <div><span>Subtotal</span><span>₹${displaySubtotal.toLocaleString('en-IN',{maximumFractionDigits:2})}</span></div>
+            <div><span>Total GST</span><span>₹${displayGST.toLocaleString('en-IN',{maximumFractionDigits:2})}</span></div>
+            <div class="grand-total"><span>Grand Total</span><span>₹${displayGrand.toLocaleString('en-IN',{maximumFractionDigits:2})}</span></div>
+            ${internalSummary}
           </div>
         </div>
 
@@ -3943,9 +4128,11 @@ function _fsSet(docId, data) {
           <div class="section-title">Terms & Conditions</div>
           <div>1. This quotation is valid until ${q.validTill}.</div>
           <div>2. Prices are subject to applicable taxes as shown above.</div>
-          <div>3. Payment terms: 50% advance, balance on delivery, unless otherwise agreed in writing.</div>
-          ${(company.bank || company.ifsc) ? `<div>4. Bank Details: ${[company.bank, company.ifsc].filter(Boolean).join(', IFSC: ')}</div>` : ''}
-          <div>${(company.bank || company.ifsc) ? '5' : '4'}. This is a system-generated quotation from ${company.name || 'Gokul Group'} CRM.</div>
+          <div>3. Payment terms: ${q.paymentTerms || '50% advance, balance on delivery'}.</div>
+          ${q.deliveryTerms ? `<div>4. Delivery terms: ${q.deliveryTerms}.</div>` : ''}
+          ${(company.bank || company.ifsc) ? `<div>Bank Details: ${[company.bank, company.ifsc].filter(Boolean).join(', IFSC: ')}</div>` : ''}
+          <div>This is a system-generated quotation from ${company.name || 'Gokul Group'} CRM.</div>
+          ${q.customerNotes ? `<div style="margin-top:10px;"><strong>Note:</strong> ${q.customerNotes}</div>` : ''}
         </div>
 
         <div class="signature-row">
@@ -3964,6 +4151,8 @@ function _fsSet(docId, data) {
       printWindow.print();
     };
   };
+
+  window.printQuotationInternal = function(id) { window.printQuotation(id, 'internal'); };
 
   window.openCreateQuoteModal = function() {
     if (!isAdmin()) { alert('🔒 Only an Admin can create quotes'); return; }
@@ -4084,6 +4273,13 @@ function _fsSet(docId, data) {
   };
 
   // TASK FUNCTIONS
+  function populateTaskCustomerSelect() {
+    const sel = document.getElementById('taskCustomer');
+    if (!sel) return;
+    const companies = [...new Set(leads.map(l => l.company).filter(Boolean))].sort();
+    sel.innerHTML = '<option value="">— None —</option>' + companies.map(c => `<option value="${c}">${c}</option>`).join('');
+  }
+
   window.openTaskModal = function() {
     editingTask = null;
     document.getElementById('taskModalTitle').textContent = '✓ Add New Task';
@@ -4092,6 +4288,12 @@ function _fsSet(docId, data) {
     document.getElementById('taskStatus').value = 'To Do';
     document.getElementById('taskDue').value = '';
     document.getElementById('taskFollowUp').value = '';
+    document.getElementById('taskPriority').value = 'Medium';
+    document.getElementById('taskDepartment').value = '';
+    document.getElementById('taskProduct').value = '';
+    populateTaskCustomerSelect();
+    document.getElementById('taskCustomer').value = '';
+    document.getElementById('taskHistorySection').style.display = 'none';
     document.getElementById('taskModal').classList.add('active');
   };
 
@@ -4101,15 +4303,28 @@ function _fsSet(docId, data) {
 
   window.saveTask = function(e) {
     e.preventDefault();
+    const newAssignedTo = parseInt(document.getElementById('taskAssigned').value);
+    const prevAssignedTo = editingTask ? editingTask.assignedTo : null;
+    const historyEntry = {
+      ts: new Date().toISOString(),
+      action: editingTask ? 'Updated' : 'Created',
+      by: currentUser ? currentUser.name : 'System',
+      note: ''
+    };
     const task = {
       id: editingTask ? editingTask.id : Date.now(),
       title: document.getElementById('taskTitle').value,
       description: document.getElementById('taskDescription').value,
       status: document.getElementById('taskStatus').value,
-      assignedTo: parseInt(document.getElementById('taskAssigned').value),
+      assignedTo: newAssignedTo,
       dueDate: document.getElementById('taskDue').value,
       followUpDate: document.getElementById('taskFollowUp').value,
-      escalated: editingTask ? editingTask.escalated : false
+      escalated: editingTask ? editingTask.escalated : false,
+      priority: document.getElementById('taskPriority').value,
+      department: document.getElementById('taskDepartment').value,
+      customer: document.getElementById('taskCustomer').value,
+      product: document.getElementById('taskProduct').value,
+      history: editingTask ? [...(editingTask.history || []), historyEntry] : [historyEntry]
     };
 
     if (editingTask) {
@@ -4120,6 +4335,20 @@ function _fsSet(docId, data) {
       tasks.push(task);
       addAuditLog('Created Task', 'Task', task.title);
     }
+
+    // Email notification on assignment (new task or changed assignee)
+    if (!editingTask || newAssignedTo !== prevAssignedTo) {
+      const assignedUser = users.find(u => u.id === newAssignedTo);
+      if (assignedUser && assignedUser.email) {
+        sendEmail(
+          assignedUser.email,
+          assignedUser.name,
+          `Task Assigned: ${task.title}`,
+          `You have been assigned a task: ${task.title}\nPriority: ${task.priority || 'Medium'}\nDue: ${task.dueDate}\n\nDescription: ${task.description || ''}`
+        ).catch(() => {});
+      }
+    }
+
     saveToStorage();
     closeTaskModal();
     renderTasks();
@@ -4136,6 +4365,28 @@ function _fsSet(docId, data) {
     document.getElementById('taskAssigned').value = editingTask.assignedTo;
     document.getElementById('taskDue').value = editingTask.dueDate;
     document.getElementById('taskFollowUp').value = editingTask.followUpDate || '';
+    document.getElementById('taskPriority').value = editingTask.priority || 'Medium';
+    document.getElementById('taskDepartment').value = editingTask.department || '';
+    document.getElementById('taskProduct').value = editingTask.product || '';
+    populateTaskCustomerSelect();
+    document.getElementById('taskCustomer').value = editingTask.customer || '';
+    // Show task history
+    const historySection = document.getElementById('taskHistorySection');
+    const historyList = document.getElementById('taskHistoryList');
+    const history = editingTask.history || [];
+    if (history.length > 0) {
+      historySection.style.display = 'block';
+      historyList.innerHTML = history.slice().reverse().map(h => {
+        const d = new Date(h.ts);
+        const dateStr = d.toLocaleDateString('en-IN') + ' ' + d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        return `<div style="padding:5px 0;border-bottom:1px solid var(--border);color:var(--text-soft);">
+          <strong style="color:var(--text);">${h.action}</strong> by ${h.by} — <span style="font-size:11px;">${dateStr}</span>
+          ${h.note ? `<div style="margin-top:2px;">${h.note}</div>` : ''}
+        </div>`;
+      }).join('');
+    } else {
+      historySection.style.display = 'none';
+    }
     document.getElementById('taskModal').classList.add('active');
   };
 
@@ -4598,9 +4849,12 @@ function _fsSet(docId, data) {
       const followUpDue = isFollowUpDue(t);
       const escalationTarget = overdue ? getEscalationTarget(t) : null;
 
+      const priorityBadge = { Low: '🟢', Medium: '🟡', High: '🔴', Critical: '🚨' };
+      const pBadge = t.priority ? `<span style="font-size:11px;margin-left:4px;">${priorityBadge[t.priority] || ''} ${t.priority}</span>` : '';
+      const customerBadge = t.customer ? `<div style="font-size:11px;color:var(--text-soft);margin-top:2px;">🏢 ${t.customer}</div>` : '';
       return `
         <tr ${overdue ? 'style="background: rgba(239, 68, 68, 0.06);"' : ''}>
-          <td><strong>${t.title}</strong><br><span style="font-size: 11px; color: var(--text-soft);">${t.description || 'No description'}</span></td>
+          <td><strong>${t.title}</strong>${pBadge}<br><span style="font-size: 11px; color: var(--text-soft);">${t.description || 'No description'}</span>${customerBadge}</td>
           <td><span class="badge ${getStatusBadge(t.status)}">${t.status}</span></td>
           <td>${user ? user.name : '—'}</td>
           <td>
@@ -4625,6 +4879,131 @@ function _fsSet(docId, data) {
 
   let editingQuotation = null;
 
+  // ---- QUOTATION LINE ITEMS ----
+
+  window.addQuoteLine = function(item) {
+    quoteLineItems.push({
+      itemId: item ? item.id : null,
+      itemName: item ? item.name : '',
+      qty: 1,
+      unit: item ? (item.unit || 'Nos') : 'Nos',
+      costPrice: item ? (item.rate || 0) : 0,
+      freight: 0,
+      other: 0,
+      sellingPrice: item ? (item.rate || 0) : 0,
+      gst: item ? (item.gst != null ? item.gst : 18) : 18
+    });
+    renderQuoteLines();
+    recalcQuote();
+  };
+
+  window.removeQuoteLine = function(idx) {
+    quoteLineItems.splice(idx, 1);
+    renderQuoteLines();
+    recalcQuote();
+  };
+
+  function renderQuoteLines() {
+    const tbody = document.getElementById('quoteLineBody');
+    if (!tbody) return;
+    if (quoteLineItems.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="10" style="padding:16px;text-align:center;color:var(--text-soft);font-size:13px;">No line items yet. Click "+ Add Line Item" to begin.</td></tr>';
+      return;
+    }
+    const itemOptions = items.map(it => `<option value="${it.id}" ${''} >${it.name}</option>`).join('');
+    tbody.innerHTML = quoteLineItems.map((li, idx) => {
+      const margin = ((li.sellingPrice || 0) - (li.costPrice || 0) - (li.freight || 0) - (li.other || 0)) * (li.qty || 1);
+      const selectedItemOpt = items.map(it => `<option value="${it.id}"${li.itemId === it.id ? ' selected' : ''}>${it.name}</option>`).join('');
+      return `<tr>
+        <td style="padding:4px 4px;">
+          <select style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;background:var(--white);color:var(--text);width:100%;"
+            onchange="onQuoteItemSelect(this,${idx})">
+            <option value="">Custom</option>
+            ${selectedItemOpt}
+          </select>
+          ${li.itemId == null ? `<input type="text" value="${li.itemName || ''}" placeholder="Item name"
+            style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;background:var(--white);color:var(--text);width:100%;margin-top:3px;"
+            oninput="syncQuoteLineField(this,${idx},'itemName')">` : ''}
+        </td>
+        <td style="padding:4px 4px;"><input type="number" min="0" value="${li.qty||1}" style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;width:54px;background:var(--white);color:var(--text);" oninput="syncQuoteLineField(this,${idx},'qty')"></td>
+        <td style="padding:4px 4px;"><input type="text" value="${li.unit||'Nos'}" style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;width:58px;background:var(--white);color:var(--text);" oninput="syncQuoteLineField(this,${idx},'unit')"></td>
+        <td style="padding:4px 4px;"><input type="number" min="0" value="${li.costPrice||0}" style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;width:82px;background:var(--white);color:var(--text-soft);" oninput="syncQuoteLineField(this,${idx},'costPrice')"></td>
+        <td style="padding:4px 4px;"><input type="number" min="0" value="${li.freight||0}" style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;width:72px;background:var(--white);color:var(--text-soft);" oninput="syncQuoteLineField(this,${idx},'freight')"></td>
+        <td style="padding:4px 4px;"><input type="number" min="0" value="${li.other||0}" style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;width:72px;background:var(--white);color:var(--text-soft);" oninput="syncQuoteLineField(this,${idx},'other')"></td>
+        <td style="padding:4px 4px;"><input type="number" min="0" value="${li.sellingPrice||0}" style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;width:86px;background:var(--white);color:var(--text);" oninput="syncQuoteLineField(this,${idx},'sellingPrice')"></td>
+        <td style="padding:4px 4px;">
+          <select style="font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;background:var(--white);color:var(--text);" onchange="syncQuoteLineField(this,${idx},'gst')">
+            ${[0,5,12,18,28].map(g => `<option value="${g}"${li.gst==g?' selected':''}>${g}%</option>`).join('')}
+          </select>
+        </td>
+        <td style="padding:4px 4px;font-size:12px;color:var(--text-soft);white-space:nowrap;">${margin >= 0 ? '' : '<span style="color:var(--danger);">'}${margin.toLocaleString('en-IN',{maximumFractionDigits:0})}${margin >= 0 ? '' : '</span>'}</td>
+        <td style="padding:4px 4px;"><button type="button" onclick="removeQuoteLine(${idx})" style="background:none;border:none;cursor:pointer;font-size:15px;color:var(--danger);">🗑️</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  window.syncQuoteLineField = function(el, idx, field) {
+    if (!quoteLineItems[idx]) return;
+    const val = (field === 'qty' || field === 'costPrice' || field === 'freight' || field === 'other' || field === 'sellingPrice' || field === 'gst')
+      ? parseFloat(el.value) || 0
+      : el.value;
+    quoteLineItems[idx][field] = val;
+    // Re-render margin cell only
+    const row = el.closest('tr');
+    if (row) {
+      const li = quoteLineItems[idx];
+      const margin = ((li.sellingPrice || 0) - (li.costPrice || 0) - (li.freight || 0) - (li.other || 0)) * (li.qty || 1);
+      const marginCell = row.cells[8];
+      if (marginCell) marginCell.innerHTML = `${margin >= 0 ? '' : '<span style="color:var(--danger);">'}${margin.toLocaleString('en-IN',{maximumFractionDigits:0})}${margin >= 0 ? '' : '</span>'}`;
+    }
+    recalcQuote();
+  };
+
+  window.onQuoteItemSelect = function(sel, idx) {
+    const itemId = parseInt(sel.value);
+    const item = items.find(i => i.id === itemId);
+    if (item) {
+      quoteLineItems[idx] = {
+        ...quoteLineItems[idx],
+        itemId: item.id,
+        itemName: item.name,
+        unit: item.unit || 'Nos',
+        costPrice: item.rate || 0,
+        gst: item.gst != null ? item.gst : 18,
+        sellingPrice: item.rate || 0
+      };
+    } else {
+      quoteLineItems[idx].itemId = null;
+    }
+    renderQuoteLines();
+    recalcQuote();
+  };
+
+  function recalcQuote() {
+    let subtotal = 0, totalGST = 0, totalCost = 0, totalMargin = 0;
+    quoteLineItems.forEach(li => {
+      const lineTotal = (li.sellingPrice || 0) * (li.qty || 1);
+      const lineCost = ((li.costPrice || 0) + (li.freight || 0) + (li.other || 0)) * (li.qty || 1);
+      const gstAmt = lineTotal * ((li.gst || 0) / 100);
+      subtotal += lineTotal;
+      totalGST += gstAmt;
+      totalCost += lineCost;
+      totalMargin += lineTotal - lineCost;
+    });
+    const grandTotal = subtotal + totalGST;
+    const fmt = v => '₹' + v.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+    const setEl = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    setEl('qSumSubtotal', fmt(subtotal));
+    setEl('qSumGST', fmt(totalGST));
+    setEl('qSumGrandTotal', fmt(grandTotal));
+    setEl('qSumTotalCost', fmt(totalCost));
+    setEl('qSumMargin', fmt(totalMargin));
+    setEl('qSumMarginPct', subtotal > 0 ? ((totalMargin / subtotal) * 100).toFixed(1) + '%' : '0%');
+    // Update hidden value field
+    const qv = document.getElementById('quoteValue');
+    if (qv) qv.value = Math.round(grandTotal) || 0;
+  }
+
   window.updateQuotationStatus = function(id, status) {
     const idx = quotations.findIndex(q => q.id === id);
     if (idx === -1) return;
@@ -4638,6 +5017,7 @@ function _fsSet(docId, data) {
     if (!isAdmin()) { alert('🔒 Only an Admin can edit quotations'); return; }
     editingQuotation = quotations.find(q => q.id === id);
     if (!editingQuotation) return;
+    window._editingQuotationId = id;
     document.getElementById('quotationModalTitle').textContent = `✏️ Edit Quotation — ${editingQuotation.quoteNo}`;
     document.getElementById('quoteCompany').value = editingQuotation.company;
     document.getElementById('quoteContactName').value = editingQuotation.contactName;
@@ -4648,6 +5028,14 @@ function _fsSet(docId, data) {
     document.getElementById('quoteProducts').value = editingQuotation.products || '';
     document.getElementById('quoteStatus').value = editingQuotation.status;
     document.getElementById('quoteNotes').value = editingQuotation.notes || '';
+    document.getElementById('quoteCustomerNotes').value = editingQuotation.customerNotes || '';
+    document.getElementById('quoteDeliveryTerms').value = editingQuotation.deliveryTerms || '';
+    const ptSel = document.getElementById('quotePaymentTerms');
+    if (ptSel) ptSel.value = editingQuotation.paymentTerms || '50% Advance 50% on Delivery';
+    // Populate line items
+    quoteLineItems = JSON.parse(JSON.stringify(editingQuotation.lineItems || []));
+    renderQuoteLines();
+    recalcQuote();
     document.getElementById('quotationModal').classList.add('active');
   };
 
@@ -4661,11 +5049,23 @@ function _fsSet(docId, data) {
     editingQuotation.contactName = document.getElementById('quoteContactName').value;
     editingQuotation.email = document.getElementById('quoteEmail').value;
     editingQuotation.phone = document.getElementById('quotePhone').value;
-    editingQuotation.value = parseInt(document.getElementById('quoteValue').value);
     editingQuotation.validTill = document.getElementById('quoteValidTill').value;
     editingQuotation.products = document.getElementById('quoteProducts').value;
     editingQuotation.status = document.getElementById('quoteStatus').value;
     editingQuotation.notes = document.getElementById('quoteNotes').value;
+    editingQuotation.customerNotes = document.getElementById('quoteCustomerNotes').value;
+    editingQuotation.deliveryTerms = document.getElementById('quoteDeliveryTerms').value;
+    editingQuotation.paymentTerms = document.getElementById('quotePaymentTerms').value;
+    editingQuotation.lineItems = JSON.parse(JSON.stringify(quoteLineItems));
+    // Compute grand total from line items for value field
+    let subtotal = 0, totalGST = 0;
+    quoteLineItems.forEach(li => {
+      const lineTotal = (li.sellingPrice || 0) * (li.qty || 1);
+      subtotal += lineTotal;
+      totalGST += lineTotal * ((li.gst || 0) / 100);
+    });
+    const grandTotal = subtotal + totalGST;
+    editingQuotation.value = grandTotal > 0 ? Math.round(grandTotal) : (parseInt(document.getElementById('quoteValue').value) || 0);
     const idx = quotations.findIndex(q => q.id === editingQuotation.id);
     if (idx !== -1) quotations[idx] = editingQuotation;
     saveToStorage();
