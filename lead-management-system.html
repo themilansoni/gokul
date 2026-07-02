@@ -1885,6 +1885,10 @@
         <span>🗂️</span>
         <span class="sidebar-label">Reports</span>
       </button>
+      <button class="nav-item" onclick="showTab('masters')" title="Masters">
+        <span>🗄️</span>
+        <span class="sidebar-label">Masters</span>
+      </button>
       <button class="nav-item" onclick="showTab('analysis')" title="Data Analysis">
         <span>🧮</span>
         <span class="sidebar-label">Data Analysis</span>
@@ -2148,6 +2152,33 @@
       </div>
 
       <!-- DATA ANALYSIS -->
+      <!-- MASTERS -->
+      <div class="view" id="masters">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Masters</h1>
+            <div class="page-desc">Manage master data tables used across the CRM</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:0;">
+          <button class="settings-tab active" id="masterTabBtn_items" onclick="showMasterTab('items')" style="border-bottom:2px solid var(--primary);margin-bottom:-2px;">📦 Item Master</button>
+        </div>
+
+        <!-- ITEM MASTER TAB -->
+        <div id="masterTab_items">
+          <div class="data-card" style="margin-bottom:16px;">
+            <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+              <span>📦 Item Master</span>
+              <button class="btn-primary" onclick="openItemForm()" style="font-size:12px;padding:6px 14px;">+ Add Item</button>
+            </div>
+            <div class="card-content">
+              <input type="text" id="itemSearch" class="form-input" placeholder="🔍 Search items..." oninput="renderItemMaster()" style="margin-bottom:14px;max-width:320px;">
+              <div id="itemMasterTable"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="view" id="analysis">
         <div class="page-header">
           <div class="page-header-left">
@@ -2573,7 +2604,10 @@
         </div>
         <div class="form-group">
           <label class="form-label">📦 Products / Services</label>
-          <input type="text" id="quoteProducts" class="form-input" placeholder="e.g. CRM License, Implementation Support">
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="quoteProducts" class="form-input" placeholder="e.g. CRM License, Implementation Support">
+            <button type="button" class="btn-primary" onclick="openItemPicker('quoteProducts')" style="white-space:nowrap;padding:0 14px;font-size:12px;">📦 Browse</button>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">📊 Status</label>
@@ -2674,6 +2708,81 @@
   </div>
 </div>
 
+<!-- ITEM MASTER MODAL -->
+<div class="modal" id="itemModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="itemModalTitle">📦 Add Item</h3>
+      <button class="modal-close" onclick="closeItemForm()">×</button>
+    </div>
+    <form onsubmit="saveItem(event)">
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Item Code *</label>
+            <input type="text" id="itemCode" class="form-input" placeholder="e.g. ITM-001" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Item Name *</label>
+            <input type="text" id="itemName" class="form-input" placeholder="e.g. CRM License" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea id="itemDescription" class="form-textarea" style="min-height:60px;" placeholder="Brief description of this item"></textarea>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <input type="text" id="itemCategory" class="form-input" placeholder="e.g. Software, Hardware, Service">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unit</label>
+            <select id="itemUnit" class="form-select">
+              <option value="Nos">Nos</option>
+              <option value="Kg">Kg</option>
+              <option value="Ltr">Ltr</option>
+              <option value="Mtr">Mtr</option>
+              <option value="Box">Box</option>
+              <option value="Set">Set</option>
+              <option value="Month">Month</option>
+              <option value="Year">Year</option>
+              <option value="Hr">Hr</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Rate (₹)</label>
+            <input type="number" id="itemRate" class="form-input" placeholder="0.00" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label class="form-label">GST %</label>
+            <select id="itemGst" class="form-select">
+              <option value="0">0%</option>
+              <option value="5">5%</option>
+              <option value="12">12%</option>
+              <option value="18" selected>18%</option>
+              <option value="28">28%</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select id="itemActive" class="form-select">
+            <option value="true">✅ Active</option>
+            <option value="false">❌ Inactive</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeItemForm()">Cancel</button>
+        <button type="submit" class="btn-success">✓ Save Item</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- CELEBRATION OVERLAY -->
 <div id="celebrationOverlay">
   <div id="celebrationBox">
@@ -2758,6 +2867,8 @@ function _fsSet(docId, data) {
   let tasks = [];
   let auditLogs = [];
   let quotations = [];
+  let items = [];
+  let editingItem = null;
   let editingLead = null;
   let editingTask = null;
   let editingUser = null;
@@ -2821,12 +2932,14 @@ function _fsSet(docId, data) {
     localStorage.setItem('gokul_tasks', JSON.stringify(tasks));
     localStorage.setItem('gokul_audit', JSON.stringify(auditLogs));
     localStorage.setItem('gokul_quotations', JSON.stringify(quotations));
+    localStorage.setItem('gokul_items', JSON.stringify(items));
     // sync to Firestore (fire-and-forget)
     _fsSet('leads', { items: leads });
     _fsSet('users', { items: users });
     _fsSet('tasks', { items: tasks });
     _fsSet('audit', { items: auditLogs });
     _fsSet('quotations', { items: quotations });
+    _fsSet('master_items', { items: items });
   }
 
   function loadFromStorage() {
@@ -2835,12 +2948,13 @@ function _fsSet(docId, data) {
     tasks = JSON.parse(localStorage.getItem('gokul_tasks')) || [];
     auditLogs = JSON.parse(localStorage.getItem('gokul_audit')) || [];
     quotations = JSON.parse(localStorage.getItem('gokul_quotations')) || [];
+    items = JSON.parse(localStorage.getItem('gokul_items')) || [];
   }
 
   async function loadFromFirestore() {
-    const [l, u, t, a, q, cs, ss] = await Promise.all([
+    const [l, u, t, a, q, mi, cs, ss] = await Promise.all([
       _fsGet('leads'), _fsGet('users'), _fsGet('tasks'),
-      _fsGet('audit'), _fsGet('quotations'),
+      _fsGet('audit'), _fsGet('quotations'), _fsGet('master_items'),
       _fsGet('company_settings'), _fsGet('smtp_settings')
     ]);
     if (l) { leads = l.items || []; localStorage.setItem('gokul_leads', JSON.stringify(leads)); }
@@ -2848,6 +2962,7 @@ function _fsSet(docId, data) {
     if (t) { tasks = t.items || []; localStorage.setItem('gokul_tasks', JSON.stringify(tasks)); }
     if (a) { auditLogs = a.items || []; localStorage.setItem('gokul_audit', JSON.stringify(auditLogs)); }
     if (q) { quotations = q.items || []; localStorage.setItem('gokul_quotations', JSON.stringify(quotations)); }
+    if (mi) { items = mi.items || []; localStorage.setItem('gokul_items', JSON.stringify(items)); }
     if (cs) localStorage.setItem('gokul_company_settings', JSON.stringify(cs));
     if (ss) localStorage.setItem('gokul_smtp_settings', JSON.stringify(ss));
   }
@@ -3212,6 +3327,7 @@ function _fsSet(docId, data) {
     }
     if (tab === 'settings') renderSettings();
     if (tab === 'reports') renderReports();
+    if (tab === 'masters') { showMasterTab('items'); }
   };
 
   window.openPasswordChange = function() {
@@ -3227,6 +3343,148 @@ function _fsSet(docId, data) {
       const input = document.getElementById('currentPassword');
       if (input) input.focus();
     }, 50);
+  };
+
+  // MASTERS
+  window.showMasterTab = function(tab) {
+    document.querySelectorAll('[id^="masterTab_"]').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('[id^="masterTabBtn_"]').forEach(el => { el.classList.remove('active'); el.style.borderBottom = ''; el.style.marginBottom = ''; });
+    document.getElementById('masterTab_' + tab).style.display = 'block';
+    const btn = document.getElementById('masterTabBtn_' + tab);
+    btn.classList.add('active'); btn.style.borderBottom = '2px solid var(--primary)'; btn.style.marginBottom = '-2px';
+    if (tab === 'items') renderItemMaster();
+  };
+
+  window.renderItemMaster = function() {
+    const q = (document.getElementById('itemSearch')?.value || '').toLowerCase();
+    const filtered = items.filter(i => !q || i.name.toLowerCase().includes(q) || i.code.toLowerCase().includes(q) || (i.category||'').toLowerCase().includes(q));
+    const el = document.getElementById('itemMasterTable');
+    if (!el) return;
+    if (!filtered.length) { el.innerHTML = '<div style="text-align:center;color:var(--text-soft);padding:32px;">No items found. Click "+ Add Item" to create one.</div>'; return; }
+    el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr style="background:var(--gray-100);">
+        <th style="padding:8px 12px;text-align:left;color:var(--text-soft);font-weight:600;">Code</th>
+        <th style="padding:8px 12px;text-align:left;color:var(--text-soft);font-weight:600;">Name</th>
+        <th style="padding:8px 12px;text-align:left;color:var(--text-soft);font-weight:600;">Category</th>
+        <th style="padding:8px 12px;text-align:left;color:var(--text-soft);font-weight:600;">Unit</th>
+        <th style="padding:8px 12px;text-align:right;color:var(--text-soft);font-weight:600;">Rate (₹)</th>
+        <th style="padding:8px 12px;text-align:center;color:var(--text-soft);font-weight:600;">GST%</th>
+        <th style="padding:8px 12px;text-align:center;color:var(--text-soft);font-weight:600;">Status</th>
+        <th style="padding:8px 12px;text-align:center;color:var(--text-soft);font-weight:600;">Actions</th>
+      </tr></thead>
+      <tbody>${filtered.map(item => `
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:8px 12px;font-weight:600;color:var(--primary);">${item.code}</td>
+          <td style="padding:8px 12px;">${item.name}<br><span style="font-size:11px;color:var(--text-soft);">${item.description||''}</span></td>
+          <td style="padding:8px 12px;color:var(--text-soft);">${item.category||'—'}</td>
+          <td style="padding:8px 12px;">${item.unit||'Nos'}</td>
+          <td style="padding:8px 12px;text-align:right;">₹${Number(item.rate||0).toLocaleString('en-IN')}</td>
+          <td style="padding:8px 12px;text-align:center;">${item.gst||0}%</td>
+          <td style="padding:8px 12px;text-align:center;"><span style="font-size:11px;padding:2px 8px;border-radius:12px;background:${item.active!==false?'rgba(21,128,61,0.12)':'rgba(185,28,28,0.1)'};color:${item.active!==false?'var(--success)':'var(--danger)'};">${item.active!==false?'Active':'Inactive'}</span></td>
+          <td style="padding:8px 12px;text-align:center;white-space:nowrap;">
+            <button class="btn-sm btn-sm-edit" onclick="editItem(${item.id})">✏️</button>
+            <button class="btn-sm btn-sm-delete" onclick="deleteItem(${item.id})">🗑️</button>
+          </td>
+        </tr>`).join('')}
+      </tbody></table>`;
+  };
+
+  window.openItemForm = function() {
+    editingItem = null;
+    document.getElementById('itemModalTitle').textContent = '📦 Add Item';
+    document.getElementById('itemCode').value = '';
+    document.getElementById('itemName').value = '';
+    document.getElementById('itemDescription').value = '';
+    document.getElementById('itemCategory').value = '';
+    document.getElementById('itemUnit').value = 'Nos';
+    document.getElementById('itemRate').value = '';
+    document.getElementById('itemGst').value = '18';
+    document.getElementById('itemActive').value = 'true';
+    document.getElementById('itemModal').classList.add('active');
+  };
+
+  window.editItem = function(id) {
+    editingItem = items.find(i => i.id === id);
+    if (!editingItem) return;
+    document.getElementById('itemModalTitle').textContent = '✏️ Edit Item';
+    document.getElementById('itemCode').value = editingItem.code;
+    document.getElementById('itemName').value = editingItem.name;
+    document.getElementById('itemDescription').value = editingItem.description || '';
+    document.getElementById('itemCategory').value = editingItem.category || '';
+    document.getElementById('itemUnit').value = editingItem.unit || 'Nos';
+    document.getElementById('itemRate').value = editingItem.rate || '';
+    document.getElementById('itemGst').value = String(editingItem.gst ?? 18);
+    document.getElementById('itemActive').value = String(editingItem.active !== false);
+    document.getElementById('itemModal').classList.add('active');
+  };
+
+  window.closeItemForm = function() { document.getElementById('itemModal').classList.remove('active'); };
+
+  window.saveItem = function(e) {
+    e.preventDefault();
+    const item = {
+      id: editingItem ? editingItem.id : Date.now(),
+      code: document.getElementById('itemCode').value.trim(),
+      name: document.getElementById('itemName').value.trim(),
+      description: document.getElementById('itemDescription').value.trim(),
+      category: document.getElementById('itemCategory').value.trim(),
+      unit: document.getElementById('itemUnit').value,
+      rate: parseFloat(document.getElementById('itemRate').value) || 0,
+      gst: parseInt(document.getElementById('itemGst').value) || 0,
+      active: document.getElementById('itemActive').value === 'true'
+    };
+    if (editingItem) { const idx = items.findIndex(i => i.id === editingItem.id); items[idx] = item; }
+    else { items.push(item); }
+    saveToStorage();
+    addAuditLog(editingItem ? 'Updated Item' : 'Added Item', 'Item Master', item.name);
+    closeItemForm();
+    renderItemMaster();
+  };
+
+  window.deleteItem = function(id) {
+    if (!confirm('Delete this item?')) return;
+    items = items.filter(i => i.id !== id);
+    saveToStorage();
+    addAuditLog('Deleted Item', 'Item Master', '');
+    renderItemMaster();
+  };
+
+  // Item picker popup for lead/quote products field
+  window.openItemPicker = function(targetFieldId) {
+    const existing = (document.getElementById(targetFieldId)?.value || '').split(',').map(s => s.trim()).filter(Boolean);
+    const activeItems = items.filter(i => i.active !== false);
+    const html = `<div class="modal active" id="itemPickerModal" style="z-index:10001;">
+      <div class="modal-content" style="max-width:500px;">
+        <div class="modal-header"><h3 class="modal-title">📦 Select Items</h3><button class="modal-close" onclick="document.getElementById('itemPickerModal').remove()">×</button></div>
+        <div class="modal-body">
+          <input type="text" class="form-input" placeholder="🔍 Search..." oninput="filterPickerItems(this.value)" style="margin-bottom:12px;" id="pickerSearch">
+          <div id="pickerList" style="max-height:300px;overflow-y:auto;">
+            ${activeItems.length ? activeItems.map(i => `
+              <label style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--border);cursor:pointer;">
+                <input type="checkbox" value="${i.name}" ${existing.includes(i.name)?'checked':''} style="width:16px;height:16px;">
+                <span style="flex:1;"><strong>${i.name}</strong> <span style="color:var(--text-soft);font-size:12px;">${i.code} · ${i.unit} · ₹${Number(i.rate).toLocaleString('en-IN')} · GST ${i.gst}%</span></span>
+              </label>`).join('') : '<div style="color:var(--text-soft);padding:20px;text-align:center;">No active items. Add items in Masters → Item Master.</div>'}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="document.getElementById('itemPickerModal').remove()">Cancel</button>
+          <button class="btn-success" onclick="applyPickerSelection('${targetFieldId}')">✓ Apply</button>
+        </div>
+      </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', html);
+  };
+
+  window.filterPickerItems = function(q) {
+    const rows = document.querySelectorAll('#pickerList label');
+    rows.forEach(r => { r.style.display = r.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none'; });
+  };
+
+  window.applyPickerSelection = function(targetFieldId) {
+    const checked = [...document.querySelectorAll('#pickerList input[type=checkbox]:checked')].map(c => c.value);
+    const el = document.getElementById(targetFieldId);
+    if (el) el.value = checked.join(', ');
+    document.getElementById('itemPickerModal').remove();
   };
 
   // AI SEARCH
@@ -3411,7 +3669,10 @@ function _fsSet(docId, data) {
         </div>
         <div class="form-group">
           <label class="form-label">📦 Products / Services</label>
-          <input type="text" id="leadProducts_${idx}" class="form-input" placeholder="e.g. CRM License, Implementation Support" value="${data.products || ''}">
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="leadProducts_${idx}" class="form-input" placeholder="e.g. CRM License, Implementation Support" value="${data.products || ''}">
+            <button type="button" class="btn-primary" onclick="openItemPicker('leadProducts_${idx}')" style="white-space:nowrap;padding:0 14px;font-size:12px;">📦 Browse</button>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">📝 Notes</label>
