@@ -2812,6 +2812,20 @@
   </div>
 </div>
 
+<!-- TASK HISTORY MODAL -->
+<div class="modal" id="taskHistoryModal">
+  <div class="modal-content" style="max-width:560px;">
+    <div class="modal-header">
+      <h3 class="modal-title">📋 Task History</h3>
+      <button class="modal-close" onclick="document.getElementById('taskHistoryModal').classList.remove('active')">×</button>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <div id="taskHistoryModalTitle" style="padding:16px 20px 0;font-weight:600;color:var(--text);font-size:14px;"></div>
+      <div id="taskHistoryModalBody" style="padding:12px 20px 20px;max-height:420px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ITEM MASTER MODAL -->
 <div class="modal" id="itemModal">
   <div class="modal-content">
@@ -4301,16 +4315,58 @@ function _fsSet(docId, data) {
     document.getElementById('taskModal').classList.remove('active');
   };
 
+  window.viewTaskHistory = function(id) {
+    const t = tasks.find(x => x.id === id);
+    if (!t) return;
+    const history = t.history || [];
+    document.getElementById('taskHistoryModalTitle').textContent = t.title;
+    const body = document.getElementById('taskHistoryModalBody');
+    if (!history.length) {
+      body.innerHTML = '<div style="color:var(--text-soft);padding:20px;text-align:center;">No history recorded yet.</div>';
+    } else {
+      const iconMap = { 'Created': '🆕', 'Escalated': '🚨', 'De-escalated': '✅', 'Assigned': '👤', 'Status changed': '🔄', 'Priority changed': '⚡', 'Due date changed': '📅', 'Updated': '✏️' };
+      body.innerHTML = history.slice().reverse().map((h, i) => {
+        const d = new Date(h.ts);
+        const dateStr = d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) + ' ' + d.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+        const icon = iconMap[h.action] || '📝';
+        const isFirst = i === history.length - 1;
+        return `<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);${isFirst?'opacity:0.6':''}">
+          <div style="font-size:20px;line-height:1;padding-top:2px;">${icon}</div>
+          <div style="flex:1;">
+            <div style="font-weight:600;color:var(--text);font-size:13px;">${h.action}</div>
+            ${h.detail ? `<div style="font-size:12px;color:var(--primary);margin-top:2px;">${h.detail}</div>` : ''}
+            <div style="font-size:11px;color:var(--text-soft);margin-top:3px;">by <strong>${h.by}</strong> · ${dateStr}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    document.getElementById('taskHistoryModal').classList.add('active');
+  };
+
   window.saveTask = function(e) {
     e.preventDefault();
     const newAssignedTo = parseInt(document.getElementById('taskAssigned').value);
     const prevAssignedTo = editingTask ? editingTask.assignedTo : null;
-    const historyEntry = {
-      ts: new Date().toISOString(),
-      action: editingTask ? 'Updated' : 'Created',
-      by: currentUser ? currentUser.name : 'System',
-      note: ''
-    };
+
+    // Build detailed change log
+    const changes = [];
+    if (editingTask) {
+      const newStatus = document.getElementById('taskStatus').value;
+      const newPriority = document.getElementById('taskPriority').value;
+      const newDue = document.getElementById('taskDue').value;
+      if (editingTask.status !== newStatus) changes.push({ action: 'Status changed', detail: `${editingTask.status} → ${newStatus}` });
+      if (editingTask.priority !== newPriority) changes.push({ action: 'Priority changed', detail: `${editingTask.priority || 'None'} → ${newPriority}` });
+      if (editingTask.dueDate !== newDue) changes.push({ action: 'Due date changed', detail: `${editingTask.dueDate || 'None'} → ${newDue}` });
+      if (prevAssignedTo !== newAssignedTo) {
+        const oldU = users.find(u => u.id === prevAssignedTo);
+        const newU = users.find(u => u.id === newAssignedTo);
+        changes.push({ action: 'Assigned', detail: `${oldU ? oldU.name : 'None'} → ${newU ? newU.name : 'None'}` });
+      }
+    }
+
+    const historyEntries = editingTask && changes.length
+      ? changes.map(c => ({ ts: new Date().toISOString(), action: c.action, detail: c.detail, by: currentUser ? currentUser.name : 'System' }))
+      : [{ ts: new Date().toISOString(), action: editingTask ? 'Updated' : 'Created', detail: '', by: currentUser ? currentUser.name : 'System' }];
     const task = {
       id: editingTask ? editingTask.id : Date.now(),
       title: document.getElementById('taskTitle').value,
@@ -4324,7 +4380,7 @@ function _fsSet(docId, data) {
       department: document.getElementById('taskDepartment').value,
       customer: document.getElementById('taskCustomer').value,
       product: document.getElementById('taskProduct').value,
-      history: editingTask ? [...(editingTask.history || []), historyEntry] : [historyEntry]
+      history: editingTask ? [...(editingTask.history || []), ...historyEntries] : historyEntries
     };
 
     if (editingTask) {
@@ -4794,6 +4850,12 @@ function _fsSet(docId, data) {
       if (overdue && !t.escalated) {
         t.escalated = true;
         const target = getEscalationTarget(t);
+        t.history = [...(t.history || []), {
+          ts: new Date().toISOString(),
+          action: 'Escalated',
+          detail: target ? `Escalated to ${target.name} (overdue since ${t.dueDate})` : `Task overdue since ${t.dueDate} — no escalation contact set`,
+          by: 'System'
+        }];
         addAuditLog('Task Escalated', 'Task', `${t.title}${target ? ' → ' + target.name : ''}`);
         if (target && target.email) {
           const assignee = users.find(u => u.id === t.assignedTo);
@@ -4806,6 +4868,12 @@ function _fsSet(docId, data) {
         changed = true;
       } else if (!overdue && t.escalated) {
         t.escalated = false;
+        t.history = [...(t.history || []), {
+          ts: new Date().toISOString(),
+          action: 'De-escalated',
+          detail: 'Task completed or due date updated — escalation cleared',
+          by: 'System'
+        }];
         changed = true;
       }
     });
@@ -4865,12 +4933,11 @@ function _fsSet(docId, data) {
             ${escalationTarget ? `<span class="badge badge-lost">🚨 ${escalationTarget.name}</span>` : (overdue ? '<span style="font-size: 11px; color: var(--text-soft);">No escalation set</span>' : '—')}
           </td>
           <td>
-            ${isAdmin() ? `
             <div class="action-buttons">
-              <button class="btn-sm btn-sm-edit" onclick="editTask(${t.id})">✏️</button>
-              <button class="btn-sm btn-sm-delete" onclick="deleteTask(${t.id})">🗑️</button>
+              <button class="btn-sm btn-sm-edit" onclick="viewTaskHistory(${t.id})" title="View History" style="background:var(--gray-100);color:var(--text);">📋</button>
+              ${isAdmin() ? `<button class="btn-sm btn-sm-edit" onclick="editTask(${t.id})">✏️</button>
+              <button class="btn-sm btn-sm-delete" onclick="deleteTask(${t.id})">🗑️</button>` : ''}
             </div>
-            ` : '—'}
           </td>
         </tr>
       `;
