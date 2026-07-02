@@ -3130,11 +3130,12 @@ function _fsSet(docId, data) {
   }
 
   // LOGIN
-  window.handleLogin = function(e) {
+  window.handleLogin = async function(e) {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const user = users.find(u => u.email === email && password === (u.password || 'pass@123'));
+    const hashed = await hashPassword(password);
+    const user = users.find(u => u.email === email && (u.password === hashed || (!isHashed(u.password) && u.password === password)));
 
     if (!user) {
       const errorEl = document.getElementById('loginError');
@@ -3142,6 +3143,14 @@ function _fsSet(docId, data) {
       errorEl.classList.add('show');
       setTimeout(() => errorEl.classList.remove('show'), 3000);
       return;
+    }
+
+    // Migrate plain-text password to hash on successful login
+    if (!isHashed(user.password)) {
+      const idx = users.findIndex(u => u.id === user.id);
+      users[idx].password = hashed;
+      user.password = hashed;
+      saveToStorage();
     }
 
     currentUser = user;
@@ -3165,6 +3174,28 @@ function _fsSet(docId, data) {
   window.closeForgotPassword = function() {
     document.getElementById('forgotPasswordModal').classList.remove('active');
   };
+
+  // SHA-256 password hashing using Web Crypto API (built into all modern browsers)
+  async function hashPassword(plain) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(plain));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function isHashed(val) {
+    return typeof val === 'string' && /^[0-9a-f]{64}$/.test(val);
+  }
+
+  // Migrate plain-text passwords to hashes on first login/save
+  async function migratePasswords() {
+    let changed = false;
+    for (let u of users) {
+      if (u.password && !isHashed(u.password)) {
+        u.password = await hashPassword(u.password);
+        changed = true;
+      }
+    }
+    if (changed) saveToStorage();
+  }
 
   function genTempPassword() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
@@ -3283,7 +3314,7 @@ function _fsSet(docId, data) {
     submitBtn.disabled = true;
 
     const idx = users.findIndex(u => u.id === userId);
-    if (idx !== -1) { users[idx].password = newPass; saveToStorage(); }
+    if (idx !== -1) { users[idx].password = await hashPassword(newPass); saveToStorage(); }
     addAuditLog('Password Reset Complete', 'User', users[idx]?.name || '');
     try { await _db.collection('reset_tokens').doc(token).delete(); } catch(e) {}
 
@@ -4485,7 +4516,7 @@ function _fsSet(docId, data) {
     document.getElementById('userModal').classList.remove('active');
   };
 
-  window.saveUser = function(e) {
+  window.saveUser = async function(e) {
     e.preventDefault();
     const user = {
       id: editingUser ? editingUser.id : Math.max(...users.map(u => u.id), 0) + 1,
@@ -4496,7 +4527,7 @@ function _fsSet(docId, data) {
       department: document.getElementById('userDepartment').value,
       designation: document.getElementById('userDesignation').value,
       escalationTo: document.getElementById('userEscalation').value ? parseInt(document.getElementById('userEscalation').value) : null,
-      password: editingUser ? editingUser.password : 'pass@123',
+      password: editingUser ? editingUser.password : await hashPassword('pass@123'),
       profilePic: editingUser ? editingUser.profilePic : ''
     };
 
@@ -5679,7 +5710,7 @@ function _fsSet(docId, data) {
     addAuditLog('Updated Profile', 'User', currentUser.name);
   };
 
-  window.changePassword = function(e) {
+  window.changePassword = async function(e) {
     e.preventDefault();
     const current = document.getElementById('currentPassword').value;
     const next = document.getElementById('newPassword').value;
@@ -5689,7 +5720,10 @@ function _fsSet(docId, data) {
     errorEl.classList.remove('show');
     successEl.classList.remove('show');
 
-    if (current !== (currentUser.password || 'pass@123')) {
+    const currentHashed = await hashPassword(current);
+    const storedPwd = currentUser.password || '';
+    const match = storedPwd === currentHashed || (!isHashed(storedPwd) && storedPwd === current);
+    if (!match) {
       errorEl.textContent = '❌ Current password is incorrect';
       errorEl.classList.add('show');
       return;
@@ -5705,7 +5739,7 @@ function _fsSet(docId, data) {
       return;
     }
 
-    currentUser.password = next;
+    currentUser.password = await hashPassword(next);
     const idx = users.findIndex(u => u.id === currentUser.id);
     if (idx !== -1) users[idx] = currentUser;
     saveToStorage();
@@ -5734,6 +5768,7 @@ function _fsSet(docId, data) {
     if (overlay) overlay.style.display = 'flex';
     try { await loadFromFirestore(); } catch(e) { loadFromStorage(); }
     initData();
+    await migratePasswords();
     if (overlay) overlay.style.display = 'none';
     initTheme();
     initSidebarState();
