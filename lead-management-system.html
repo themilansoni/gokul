@@ -2218,6 +2218,7 @@
           <button class="settings-tab" id="settingsTabBtn_appearance" onclick="showSettingsTab('appearance')">🎨 Appearance</button>
           <button class="settings-tab" id="settingsTabBtn_company" onclick="showSettingsTab('company')" style="display: none;">🏢 Company</button>
           <button class="settings-tab" id="settingsTabBtn_smtp" onclick="showSettingsTab('smtp')" style="display: none;">✉️ SMTP</button>
+          <button class="settings-tab" id="settingsTabBtn_backup" onclick="showSettingsTab('backup')" style="display: none;">🗄️ Backup</button>
         </div>
 
         <!-- PROFILE TAB -->
@@ -2428,6 +2429,35 @@
                 <div style="font-size: 11px; color: var(--text-soft); margin-bottom: 16px;">⚠️ This is a static front-end app with no backend — these settings are stored locally for reference only and won't actually send emails. Connect a backend/serverless mail relay to make this functional.</div>
                 <button type="submit" class="btn-success">✓ Save SMTP Settings</button>
               </form>
+            </div>
+          </div>
+        </div>
+        <!-- BACKUP TAB -->
+        <div class="settings-tab-content" id="settingsTab_backup">
+          <div class="data-card" style="margin-bottom:16px;">
+            <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;">
+              <span>🗄️ Cloud Snapshots</span>
+              <button class="btn-primary" onclick="createBackupNow()" id="backupNowBtn" style="font-size:12px;padding:6px 16px;">💾 Backup Now</button>
+            </div>
+            <div class="card-content">
+              <div style="font-size:12px;color:var(--text-soft);margin-bottom:16px;">
+                Snapshots are saved automatically on every login. Up to <strong>30 snapshots</strong> are kept — oldest are removed automatically. Click any snapshot to restore.
+              </div>
+              <div id="backupStatusMsg" style="margin-bottom:12px;"></div>
+              <div id="backupSnapshotList"><div style="color:var(--text-soft);font-size:13px;">Loading snapshots...</div></div>
+            </div>
+          </div>
+          <div class="data-card">
+            <div class="card-header">📥 Export / Import JSON</div>
+            <div class="card-content">
+              <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                <button class="btn-primary" onclick="exportBackupJSON()" style="font-size:13px;">⬇️ Download Full Backup</button>
+                <label class="btn-primary" style="font-size:13px;cursor:pointer;display:inline-flex;align-items:center;">
+                  ⬆️ Restore from File
+                  <input type="file" accept=".json" onchange="importBackupJSON(event)" style="display:none;">
+                </label>
+              </div>
+              <div style="font-size:11px;color:var(--text-soft);margin-top:10px;">Download saves all CRM data as a .json file to your computer. Restore from File imports a previously downloaded backup.</div>
             </div>
           </div>
         </div>
@@ -3160,6 +3190,8 @@ function _fsSet(docId, data) {
     applyRolePermissions();
     populateAssignees();
     renderAll();
+    // Auto-snapshot on every login (silent)
+    if (user.role === 'Admin') createBackupSnapshot(true);
   };
 
   // FORGOT PASSWORD
@@ -5618,6 +5650,8 @@ function _fsSet(docId, data) {
     if (smtpTabBtn) smtpTabBtn.style.display = isAdmin ? '' : 'none';
     const companyTabBtn = document.getElementById('settingsTabBtn_company');
     if (companyTabBtn) companyTabBtn.style.display = isAdmin ? '' : 'none';
+    const backupTabBtn = document.getElementById('settingsTabBtn_backup');
+    if (backupTabBtn) backupTabBtn.style.display = isAdmin ? '' : 'none';
     if (isAdmin) {
       const smtp = getSmtpSettings();
       document.getElementById('smtpHost').value = smtp.host || '';
@@ -5656,7 +5690,158 @@ function _fsSet(docId, data) {
     const btn = document.getElementById('settingsTabBtn_' + tab);
     if (content) content.classList.add('active');
     if (btn) btn.classList.add('active');
+    if (tab === 'backup') loadBackupSnapshots();
   };
+
+  // ── BACKUP & RESTORE ──────────────────────────────────────────
+  const MAX_SNAPSHOTS = 30;
+
+  function getBackupPayload() {
+    return {
+      leads, users, tasks, auditLogs, quotations, items,
+      company_settings: JSON.parse(localStorage.getItem('gokul_company_settings') || '{}'),
+      smtp_settings:    JSON.parse(localStorage.getItem('gokul_smtp_settings') || '{}'),
+      backedUpAt: new Date().toISOString(),
+      backedUpBy: currentUser ? currentUser.name : 'System'
+    };
+  }
+
+  async function createBackupSnapshot(silent) {
+    try {
+      const ts = Date.now();
+      const payload = getBackupPayload();
+      await _db.collection('backups').doc(String(ts)).set(payload);
+      // Prune oldest snapshots beyond MAX_SNAPSHOTS
+      const all = await _db.collection('backups').orderBy(firebase.firestore.FieldPath.documentId()).get();
+      if (all.size > MAX_SNAPSHOTS) {
+        const toDelete = all.docs.slice(0, all.size - MAX_SNAPSHOTS);
+        await Promise.all(toDelete.map(d => d.ref.delete()));
+      }
+      if (!silent) {
+        showBackupMsg('✅ Snapshot saved — ' + new Date(ts).toLocaleString('en-IN'), 'success');
+        loadBackupSnapshots();
+      }
+    } catch(e) {
+      if (!silent) showBackupMsg('❌ Backup failed: ' + e.message, 'error');
+    }
+  }
+
+  window.createBackupNow = async function() {
+    const btn = document.getElementById('backupNowBtn');
+    btn.textContent = '⏳ Saving...'; btn.disabled = true;
+    await createBackupSnapshot(false);
+    btn.textContent = '💾 Backup Now'; btn.disabled = false;
+  };
+
+  async function loadBackupSnapshots() {
+    const el = document.getElementById('backupSnapshotList');
+    if (!el) return;
+    el.innerHTML = '<div style="color:var(--text-soft);font-size:13px;">Loading...</div>';
+    try {
+      const snap = await _db.collection('backups').orderBy(firebase.firestore.FieldPath.documentId(), 'desc').limit(MAX_SNAPSHOTS).get();
+      if (snap.empty) { el.innerHTML = '<div style="color:var(--text-soft);font-size:13px);padding:12px 0;">No snapshots yet. Click "Backup Now" to create one.</div>'; return; }
+      el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead><tr style="background:var(--gray-100);">
+          <th style="padding:8px 12px;text-align:left;color:var(--text-soft);font-weight:600;">#</th>
+          <th style="padding:8px 12px;text-align:left;color:var(--text-soft);font-weight:600;">Date & Time</th>
+          <th style="padding:8px 12px;text-align:left;color:var(--text-soft);font-weight:600;">Saved By</th>
+          <th style="padding:8px 12px;text-align:right;color:var(--text-soft);font-weight:600;">Records</th>
+          <th style="padding:8px 12px;text-align:center;color:var(--text-soft);font-weight:600;">Action</th>
+        </tr></thead>
+        <tbody>${snap.docs.map((d, i) => {
+          const data = d.data();
+          const dt = new Date(parseInt(d.id));
+          const records = (data.leads||[]).length + (data.users||[]).length + (data.tasks||[]).length + (data.quotations||[]).length;
+          const isLatest = i === 0;
+          return `<tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;color:var(--text-soft);">${snap.size - i}</td>
+            <td style="padding:8px 12px;font-weight:${isLatest?'600':'400'};color:${isLatest?'var(--primary)':'var(--text)'};">
+              ${dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})} &nbsp;${dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}
+              ${isLatest ? '<span style="font-size:10px;background:var(--primary);color:#fff;padding:1px 6px;border-radius:8px;margin-left:6px;">Latest</span>' : ''}
+            </td>
+            <td style="padding:8px 12px;">${data.backedUpBy || '—'}</td>
+            <td style="padding:8px 12px;text-align:right;">${records} records</td>
+            <td style="padding:8px 12px;text-align:center;">
+              <button class="btn-sm btn-sm-edit" onclick="restoreSnapshot('${d.id}')" style="font-size:11px;">♻️ Restore</button>
+            </td>
+          </tr>`;
+        }).join('')}</tbody></table>`;
+    } catch(e) {
+      el.innerHTML = '<div style="color:var(--danger);font-size:13px;">Failed to load snapshots.</div>';
+    }
+  }
+
+  window.restoreSnapshot = async function(docId) {
+    if (!confirm('⚠️ Restore this snapshot? Current data will be replaced. A new backup of current data will be saved first.')) return;
+    showBackupMsg('⏳ Creating safety backup before restore...', 'info');
+    await createBackupSnapshot(true);
+    try {
+      const doc = await _db.collection('backups').doc(docId).get();
+      if (!doc.exists) { showBackupMsg('❌ Snapshot not found.', 'error'); return; }
+      const data = doc.data();
+      leads      = data.leads      || leads;
+      users      = data.users      || users;
+      tasks      = data.tasks      || tasks;
+      auditLogs  = data.auditLogs  || auditLogs;
+      quotations = data.quotations || quotations;
+      items      = data.items      || items;
+      if (data.company_settings) localStorage.setItem('gokul_company_settings', JSON.stringify(data.company_settings));
+      if (data.smtp_settings)    localStorage.setItem('gokul_smtp_settings',    JSON.stringify(data.smtp_settings));
+      saveToStorage();
+      addAuditLog('Data Restored', 'Backup', new Date(parseInt(docId)).toLocaleString('en-IN'));
+      renderAll();
+      showBackupMsg('✅ Data restored from ' + new Date(parseInt(docId)).toLocaleString('en-IN'), 'success');
+      loadBackupSnapshots();
+    } catch(e) {
+      showBackupMsg('❌ Restore failed: ' + e.message, 'error');
+    }
+  };
+
+  window.exportBackupJSON = function() {
+    const payload = getBackupPayload();
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'gokul-crm-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+  };
+
+  window.importBackupJSON = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!confirm('⚠️ Import this backup? Current data will be replaced. A cloud snapshot of current data will be saved first.')) { e.target.value=''; return; }
+    createBackupSnapshot(true);
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      try {
+        const data = JSON.parse(evt.target.result);
+        leads      = data.leads      || leads;
+        users      = data.users      || users;
+        tasks      = data.tasks      || tasks;
+        auditLogs  = data.auditLogs  || auditLogs;
+        quotations = data.quotations || quotations;
+        items      = data.items      || items;
+        if (data.company_settings) localStorage.setItem('gokul_company_settings', JSON.stringify(data.company_settings));
+        if (data.smtp_settings)    localStorage.setItem('gokul_smtp_settings',    JSON.stringify(data.smtp_settings));
+        saveToStorage();
+        addAuditLog('Data Imported', 'Backup', file.name);
+        renderAll();
+        showBackupMsg('✅ Backup imported successfully from ' + file.name, 'success');
+      } catch(err) {
+        showBackupMsg('❌ Invalid backup file: ' + err.message, 'error');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
+  function showBackupMsg(msg, type) {
+    const el = document.getElementById('backupStatusMsg');
+    if (!el) return;
+    const colors = { success: 'var(--success)', error: 'var(--danger)', info: 'var(--primary)' };
+    el.innerHTML = `<div style="padding:8px 12px;border-radius:6px;font-size:13px;color:${colors[type]||'var(--text)'};background:${colors[type]||'var(--text)'}18;border-left:3px solid ${colors[type]||'var(--text)'};">${msg}</div>`;
+    if (type === 'success') setTimeout(() => { if(el) el.innerHTML=''; }, 4000);
+  }
 
   window.saveSmtpSettings = function(e) {
     e.preventDefault();
