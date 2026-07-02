@@ -4355,7 +4355,7 @@ function _fsSet(docId, data) {
     if (!history.length) {
       body.innerHTML = '<div style="color:var(--text-soft);padding:20px;text-align:center;">No history recorded yet.</div>';
     } else {
-      const iconMap = { 'Created': '🆕', 'Escalated': '🚨', 'De-escalated': '✅', 'Assigned': '👤', 'Status changed': '🔄', 'Priority changed': '⚡', 'Due date changed': '📅', 'Updated': '✏️' };
+      const iconMap = { 'Created': '🆕', 'Escalated': '🚨', 'De-escalated': '✅', 'Assigned': '👤', 'Status changed': '🔄', 'Priority changed': '⚡', 'Due date changed': '📅', 'Follow-up date changed': '🔔', 'Title changed': '✏️', 'Description updated': '📝', 'Department changed': '🏢', 'Customer changed': '🤝', 'Product changed': '📦', 'Updated': '✏️' };
       body.innerHTML = history.slice().reverse().map((h, i) => {
         const d = new Date(h.ts);
         const dateStr = d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) + ' ' + d.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
@@ -4382,17 +4382,39 @@ function _fsSet(docId, data) {
     // Build detailed change log
     const changes = [];
     if (editingTask) {
-      const newStatus = document.getElementById('taskStatus').value;
-      const newPriority = document.getElementById('taskPriority').value;
-      const newDue = document.getElementById('taskDue').value;
-      if (editingTask.status !== newStatus) changes.push({ action: 'Status changed', detail: `${editingTask.status} → ${newStatus}` });
-      if (editingTask.priority !== newPriority) changes.push({ action: 'Priority changed', detail: `${editingTask.priority || 'None'} → ${newPriority}` });
-      if (editingTask.dueDate !== newDue) changes.push({ action: 'Due date changed', detail: `${editingTask.dueDate || 'None'} → ${newDue}` });
+      const newStatus    = document.getElementById('taskStatus').value;
+      const newPriority  = document.getElementById('taskPriority').value;
+      const newDue       = document.getElementById('taskDue').value;
+      const newFollowUp  = document.getElementById('taskFollowUp').value;
+      const newTitle     = document.getElementById('taskTitle').value;
+      const newDesc      = document.getElementById('taskDescription').value;
+      const newDept      = document.getElementById('taskDepartment').value;
+      const newCustomer  = document.getElementById('taskCustomer').value;
+      const newProduct   = document.getElementById('taskProduct').value;
+
+      if (editingTask.title !== newTitle)
+        changes.push({ action: 'Title changed', detail: `"${editingTask.title}" → "${newTitle}"` });
+      if (editingTask.status !== newStatus)
+        changes.push({ action: 'Status changed', detail: `${editingTask.status} → ${newStatus}` });
+      if ((editingTask.priority || '') !== newPriority)
+        changes.push({ action: 'Priority changed', detail: `${editingTask.priority || 'None'} → ${newPriority}` });
       if (prevAssignedTo !== newAssignedTo) {
         const oldU = users.find(u => u.id === prevAssignedTo);
         const newU = users.find(u => u.id === newAssignedTo);
         changes.push({ action: 'Assigned', detail: `${oldU ? oldU.name : 'None'} → ${newU ? newU.name : 'None'}` });
       }
+      if ((editingTask.dueDate || '') !== newDue)
+        changes.push({ action: 'Due date changed', detail: `${editingTask.dueDate || 'None'} → ${newDue || 'None'}` });
+      if ((editingTask.followUpDate || '') !== newFollowUp)
+        changes.push({ action: 'Follow-up date changed', detail: `${editingTask.followUpDate || 'None'} → ${newFollowUp || 'None'}` });
+      if ((editingTask.department || '') !== newDept && newDept)
+        changes.push({ action: 'Department changed', detail: `${editingTask.department || 'None'} → ${newDept}` });
+      if ((editingTask.customer || '') !== newCustomer && newCustomer)
+        changes.push({ action: 'Customer changed', detail: `${editingTask.customer || 'None'} → ${newCustomer}` });
+      if ((editingTask.product || '') !== newProduct && newProduct)
+        changes.push({ action: 'Product changed', detail: `${editingTask.product || 'None'} → ${newProduct}` });
+      if ((editingTask.description || '') !== newDesc)
+        changes.push({ action: 'Description updated', detail: '' });
     }
 
     const historyEntries = editingTask && changes.length
